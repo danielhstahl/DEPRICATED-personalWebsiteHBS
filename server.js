@@ -4,6 +4,8 @@ var http=require('http');
 var katex = require('parse-katex');
 var bodyParser = require('body-parser');
 var app = express();
+var port=process.env.OPENSHIFT_NODEJS_PORT || 4000; //for openshift support
+var ip=process.env.OPENSHIFT_NODEJS_IP || 127.0.0.1; //for openshift support
 var server  = http.createServer(app); //required fro socket.io
 var io= require('socket.io').listen(server);
 
@@ -70,4 +72,4 @@ app.post('/stock', function(req, res){
   });
 });
 
-server.listen(4000);
+server.listen(port, ip);

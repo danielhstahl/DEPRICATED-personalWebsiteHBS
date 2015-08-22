@@ -1,20 +1,20 @@
 var express = require('express');
 var http=require('http');
-//var exphbs  = require('express-handlebars');
-var katex = require('parse-katex');
+var exphbs  = require('express-handlebars');
+//var katex = require('parse-katex');
 var bodyParser = require('body-parser');
 var app = express();
 var port=process.env.OPENSHIFT_NODEJS_PORT || 4000; //for openshift support
-var ip=process.env.OPENSHIFT_NODEJS_IP || 127.0.0.1; //for openshift support
+var ip=process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1"; //for openshift support
 var server  = http.createServer(app); //required fro socket.io
 var io= require('socket.io').listen(server);
 
 
 app.use(bodyParser.json());
-//var handlebars=exphbs.create({extname: '.html'});
+var handlebars=exphbs.create({extname: '.html'});
 
-//app.engine('html', handlebars.engine);
-app.engine('html', katex.templateEngine);
+app.engine('html', handlebars.engine);
+//app.engine('html', katex.templateEngine);
 app.set('view engine', 'html');
 
 //app.use('/assets', express.static('semantic'));

@@ -7,11 +7,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-  <!--<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">-->
-  <!--<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>-->
-  <!--<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>-->
   <script src="http://code.highcharts.com/highcharts.js"></script>
-  <!--<script src="/assets/js/highcharts-custom.js"></script>-->
+
   <script src='/socket.io/socket.io.js'></script>
   <script src="/assets/js/path.js"></script>
 
@@ -23,7 +20,8 @@
   <link href='/assets/css/prism.css' rel='stylesheet' />
 
   <script src="/assets/js/handlebars-v3.0.3.js"></script>
-  <script src="/assets/js/mathjaxHelper.js"></script> <!--handlebars helper {{#mathjax}}{{/mathjax}}-->
+  <script src="/assets/js/mathjaxHelper.js"></script>
+  <!--handlebars helper {{#mathjax}}{{/mathjax}}-->
   <link href="/assets/css/simple-sidebar.css" rel="stylesheet">
   <script src="/assets/templates/templates.js"></script>
   <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
@@ -159,21 +157,9 @@
   </div>
 </body>
 <script>
-  //  var crossroads=new Crossroads();
-  Handlebars.registerHelper("debug", function(optionalValue) {
-    console.log("Current Context");
-    console.log("====================");
-    console.log(this);
-
-    if (optionalValue) {
-      console.log("Value");
-      console.log("====================");
-      console.log(optionalValue);
-    }
-  });
   var socket = io();
 
-  var chart = ""; //"global" chart variable
+  var chart = ""; /*"global" chart variable*/
   Handlebars.partials = Handlebars.templates;
   var template = Handlebars.templates['textAreas'];
   var sidebarTemplate = Handlebars.templates['sidebar'];
@@ -356,7 +342,7 @@
           }],
           chartId: "firstHittingTime",
           hasOptions: true,
-          submitId: "projects/firstHittingTime" //this is used for communitcateing with server
+          submitId: "projects/firstHittingTime" /*this is used for communitcateing with server*/
         }]
       }],
 
@@ -375,7 +361,7 @@
       var subRecord = record.content;
       var m = subRecord.length;
       for (var j = 0; j < m; j++) {
-        if (subRecord[j][record.route]) { //if additional pages defined through route
+        if (subRecord[j][record.route]) { /*if additional pages defined through route*/
           iterate(subRecord[j][record.route]);
         }
       }
@@ -398,14 +384,13 @@
   $('#sidebar-wrapper').html(sidebarTemplate({
     data: siteObj
   }));
-  //Path.rescue("#/home");
   Path.root("#/home");
   Path.listen();
   $('.big.icon').click(function(e) {
     $('.sidebar').sidebar('setting', 'dimPage', false).sidebar('toggle');
   });
 
-  function traverseDom() { //gets any stock value and age
+  function traverseDom() { /*gets any stock value and age*/
     $('.stock').each(function() {
       var $element = $(this);
       var ticker = $element.attr('id');
@@ -416,12 +401,12 @@
     function getAge() {
       var birthday = new Date("4/10/1989");
       var ageDifMs = Date.now() - birthday.getTime();
-      var ageDate = new Date(ageDifMs); // miliseconds from epoch
+      var ageDate = new Date(ageDifMs); /* miliseconds from epoch*/
       return Math.abs(ageDate.getUTCFullYear() - 1970);
     }
   }
 
-  function getStock(stock, element) { //get stock values from name
+  function getStock(stock, element) { /*get stock values from name*/
     $.ajax({
       url: '/stock',
       method: 'post',
@@ -450,7 +435,7 @@
     $('#wrapper').toggleClass('toggled');
   });
 
-  $('#mainText').on('click', '#execute', function(e) { //if project "Submit" is clicked
+  $('#mainText').on('click', '#execute', function(e) { /*f project "Submit" is clicked*/
     $('.progress').removeClass('hidden');
     var attributes = {};
     $('.projectInput').each(function() {
@@ -475,17 +460,19 @@
     $('#progressBar').css("width", data);
   });
   socket.on('result', function(data) {
-    chart="";
+    chart = "";
     $('#progressBar').css("width", '0%');
     $('.progress').addClass('hidden');
-    console.log(data);
-    if (data.y) { //then no "options"
+    //console.log(data);
+    if (data.y) { /*then no "options"*/
       createChart(data);
-    } else { //has options, show on screen
+    } else { /*has options, show on screen*/
       var options = Object.keys(data);
       var $select = $('#selection');
       options.sort();
-      $select.html(selectionTemplate({keys:options})); //select a chart
+      $select.html(selectionTemplate({
+        keys: options
+      })); /*select a chart*/
       $select.on('click', '.selectSeries', function(e) {
         e.preventDefault();
         handleSeriesClick(data, this);
@@ -494,13 +481,13 @@
   });
 
   function createChart(data) {
-    if (isNaN(data.y[0]) || Math.abs(data.y[0]) > 100) { //something bad happened in the algorithm...
+    if (isNaN(data.y[0]) || Math.abs(data.y[0]) > 100) { /*something bad happened in the algorithm...*/
       console.log("problem!");
     } else {
       var n = data.x.length;
       var nMin = 0;
       var nMax = n - 1;
-      var yMin = data.yMax * .003; //since otherwise long lead in, lead out
+      var yMin = data.yMax * .003; /*since otherwise long lead in, lead out*/
       while (data.y[nMin] < yMin) {
         nMin++;
       }
@@ -571,7 +558,7 @@
       var numSeries = chart.series.length;
       console.log(chart.series);
       for (var i = 0; i < numSeries; i++) {
-        if (chart.series[i].name === value) { //inefficient, but until the series gets a hashmap...
+        if (chart.series[i].name === value) { /*inefficient, but until the series gets a hashmap...*/
           chart.series[i].remove();
           break;
         }
@@ -587,8 +574,10 @@
       }
     }
   }
-  $('#mainText').on('click', '#projectHelp', function(e){
-    var mdl=modal({text:'creditRiskResearch'});
+  $('#mainText').on('click', '#projectHelp', function(e) {
+    var mdl = modal({
+      text: 'creditRiskResearch'
+    });
     console.log($(mdl)[2]);
     $($(mdl)[2]).modal('show')
   });

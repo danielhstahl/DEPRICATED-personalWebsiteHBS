@@ -1,0 +1,92 @@
+h2 {
+  font-family: 'Raleway', sans-serif;
+}
+
+.stockUp {
+  color: green;
+}
+
+.stockDown {
+  color: red;
+}
+
+.txt {
+  font-family: 'Raleway', sans-serif;
+  font-size: 125%;
+}
+
+.topScreen {
+  margin-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+.gridPadding {
+  padding: 14px;
+}
+
+.avatar {
+  height: 48px!important;
+  width: 48px!important;
+}
+
+.middle {
+  vertical-align: middle;
+}
+
+.container {
+  max-width: 800px;
+}
+
+.icon {
+  height: 48px;
+  width: 48px;
+  display: block;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.thumbnail {
+  /*height:190px;*/
+  overflow: hidden;
+  height: 150px;
+  /*overflow: auto;*/
+}
+
+.thumbnail img {
+  /*height:150px;*/
+  /*width:100%;*/
+  max-width: none;
+  height: 100%;
+  /*background-size: 100% auto;*/
+}
+/*.fixedImageHeight{
+  height:180px;
+}*/
+
+@media(max-width:767px) {
+  /*for very small devices (phones) */
+  #page-content-wrapper {
+    padding: 0;
+  }
+  .topScreen {
+    margin: 0;
+    position: fixed;
+    width: 100%;
+  }
+  #mainText {
+    padding-top: 50px;
+  }
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+  }
+}

@@ -3,6 +3,17 @@
 templates['analytics'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "Audit Analytics provides data services to Audit Services to facilitate audit testing.  These data services involve creating visualizations to make the underlying data accessible and actionable to Audit Services, automating audit testing, and providing self-service tools for auditors to dynamically explore the data.  Audit provides a unique opportunity for analyzing data.  Audit's mandate is to independently access bank data sources in order to provide assurance around the bank's processes.  Hence all the bank's data is available for Audit Analytics to mine.  These data sources can be as diverse as system access data (for example, using active directory), portfolio data at the loan level, and transactional data for wires.\n";
 },"useData":true});
+templates['chart'] = template({"1":function(depth0,helpers,partials,data) {
+    return "    <div id='chartist' class='col-md-8'>\n\n    </div>\n    <div id='selection' class='col-md-4'>\n    </div>\n";
+},"3":function(depth0,helpers,partials,data) {
+    return "    <div id='chartist'>\n\n    </div>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<div class='progress'>\n  <div id=\"progressBar\" class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"60\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 0%;\"></div>\n</div>\n<div class='row'>\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.hasOptions : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</div>\n";
+},"useData":true});
 templates['createSelection'] = template({"1":function(depth0,helpers,partials,data) {
     return "      <a class='selectSeries list-group-item' rol='menuitem' tabindex='-1' href='#'>"
     + this.escapeExpression(this.lambda(depth0, depth0))
@@ -395,7 +406,7 @@ templates['firstHittingTimeResearch'] = template({"1":function(depth0,helpers,pa
 templates['inputProject'] = template({"1":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
-  return "    <div class=\"form-group\">\n      <label for='"
+  return "    <div class=\"form-group col-md-4 col-sm-6\">\n      <label for='"
     + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
     + "'>"
     + alias3(((helper = (helper = helpers.label || (depth0 != null ? depth0.label : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"label","hash":{},"data":data}) : helper)))
@@ -404,20 +415,14 @@ templates['inputProject'] = template({"1":function(depth0,helpers,partials,data)
     + "' class='form-control projectInput' placeholder='"
     + alias3(((helper = (helper = helpers.placeholder || (depth0 != null ? depth0.placeholder : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"placeholder","hash":{},"data":data}) : helper)))
     + "'></input>\n    </div>\n";
-},"3":function(depth0,helpers,partials,data) {
-    return "    <div id='chartist' class='col-md-8'>\n\n    </div>\n    <div id='selection' class='col-md-4'>\n    </div>\n";
-},"5":function(depth0,helpers,partials,data) {
-    return "    <div id='chartist'>\n\n    </div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper;
 
-  return "<div>\n  <div style='margin-top:40px;'>\n    <button id='projectHelp' class='btn btn-warning pull-right'>Explanation</button>\n  </div>\n"
+  return "<div class='row'>\n  <div style='margin-top:40px;'>\n\n  </div>\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.input : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "</div>\n<button id='execute' data-route='"
     + this.escapeExpression(((helper = (helper = helpers.submitId || (depth0 != null ? depth0.submitId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"submitId","hash":{},"data":data}) : helper)))
-    + "' class='btn btn-primary'>Execute</button>\n<div style='height:50px;'></div>\n<div class='progress hidden'>\n  <div id=\"progressBar\" class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"60\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 0%;\"></div>\n</div>\n<div class='row'>\n"
-    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.hasOptions : depth0),{"name":"if","hash":{},"fn":this.program(3, data, 0),"inverse":this.program(5, data, 0),"data":data})) != null ? stack1 : "")
-    + "</div>\n";
+    + "' class='btn btn-primary'>Execute</button>\n<button id='projectHelp' class='btn btn-warning pull-right'>Explanation</button>\n";
 },"useData":true});
 templates['mathematicalModeling'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "The purpose of a model is to interpret data for human consumption to facilitate superior decision making.  Increasing complexity of the stochastic data generating process requires mathematical sophistication, while providing results in a timely, understandable, and applicable manner.  Thus a model must be computationally efficient, it must have informative output, and it must be reliable.  As with data, I have self-imposed the following constraints in creating a model:\r<ul>\r<li> The model must be parsimonious</li>\r<li> The model must, whenever practicable, have a semi-analytical solution (to the point that efficient methods of solutions can achieved)</li>\r<li> The model must be repeatable.</li>\r<li> The model either must be have a GUI or be embedded within a data flow. </li>\r</ul>\r\n";
@@ -427,7 +432,7 @@ templates['modal'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(
 
   return "<!-- Modal -->\n<div class=\"modal fade\" id=\"newModal\" tabindex=\"-1\" role=\"dialog\" ><!--aria-labelledby=\"myModalLabel\">-->\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n        <!--<h4 class=\"modal-title\" id=\"myModalLabel\">"
     + this.escapeExpression(((helper = (helper = helpers.queryId || (depth0 != null ? depth0.queryId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"queryId","hash":{},"data":data}) : helper)))
-    + "</h4>-->\n      </div>\n      <div class=\"modal-body\">\n        <div class='verticalScroll'>\n            <div class='container-fluid'>\n"
+    + "</h4>-->\n      </div>\n      <div class=\"modal-body\">\n        <div class='verticalScroll'>\n            <div class=''>\n"
     + ((stack1 = this.invokePartial(helpers.lookup.call(depth0,depth0,"text",{"name":"lookup","hash":{},"data":data}),depth0,{"data":data,"indent":"                ","helpers":helpers,"partials":partials})) != null ? stack1 : "")
     + "             </div>\n        </div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n";
 },"usePartial":true,"useData":true});
@@ -465,11 +470,7 @@ templates['operationalRiskResearch'] = template({"1":function(depth0,helpers,par
 },"23":function(depth0,helpers,partials,data) {
     return "d\\mu";
 },"25":function(depth0,helpers,partials,data) {
-    var helper;
-
-  return "{E}[e^{uiX_t}]=e^{t \\int_"
-    + this.escapeExpression(((helper = (helper = helpers.R || (depth0 != null ? depth0.R : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"R","hash":{},"data":data}) : helper)))
-    + " (e^{iuL}-1) \\lambda d\\mu}=e^{\\lambda t \\left({E}\\left[e^{iuL_j}\\right]-1\\right)}";
+    return "{E}[e^{uiX_t}]=e^{t \\int_{R} (e^{iuL}-1) \\lambda d\\mu}=e^{\\lambda t \\left({E}\\left[e^{iuL_j}\\right]-1\\right)}";
 },"27":function(depth0,helpers,partials,data) {
     return "t";
 },"29":function(depth0,helpers,partials,data) {
@@ -572,7 +573,7 @@ templates['operationalRiskResearch'] = template({"1":function(depth0,helpers,par
   stack1 = ((helper = (helper = helpers.tex || (depth0 != null ? depth0.tex : depth0)) != null ? helper : alias1),(options={"name":"tex","hash":{},"fn":this.program(13, data, 0),"inverse":this.noop,"data":data}),(typeof helper === alias2 ? helper.call(depth0,options) : helper));
   if (!helpers.tex) { stack1 = alias3.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  buffer += " is a compound Poisson jump process.  Intuitively, loss events arrive as a ``stream'' instead of at a point in time, with no two events occurring simultaneously.  %For the remainder of this paper the distribution of ";
+  buffer += " is a compound Poisson jump process.  Intuitively, loss events arrive as a ``stream'' instead of at a point in time, with no two events occurring simultaneously.  For the remainder of this paper the distribution of ";
   stack1 = ((helper = (helper = helpers.tex || (depth0 != null ? depth0.tex : depth0)) != null ? helper : alias1),(options={"name":"tex","hash":{},"fn":this.program(15, data, 0),"inverse":this.noop,"data":data}),(typeof helper === alias2 ? helper.call(depth0,options) : helper));
   if (!helpers.tex) { stack1 = alias3.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
@@ -670,7 +671,7 @@ templates['operationalRiskResearch'] = template({"1":function(depth0,helpers,par
   stack1 = ((helper = (helper = helpers.tex || (depth0 != null ? depth0.tex : depth0)) != null ? helper : alias1),(options={"name":"tex","hash":{},"fn":this.program(47, data, 0),"inverse":this.noop,"data":data}),(typeof helper === alias2 ? helper.call(depth0,options) : helper));
   if (!helpers.tex) { stack1 = alias3.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  buffer += ".  Hence this specification fully incorporates correlation between jump size and frequency of jumps and frequency of jumps with itself.  Since there is clear correlation between the jump size and jump frequency, the equation for the laplace transform can no longer be directly applied.  However, Carr and WU (2004) showed that by using the ``leverage neutral'' measure that the characteristic function of ";
+  buffer += ".  Hence this specification fully incorporates correlation between jump size and frequency of jumps and frequency of jumps with itself.  Since there is clear correlation between the jump size and jump frequency, the equation for the laplace transform can no longer be directly applied.  However, Carr and Wu (2004) showed that by using the ``leverage neutral'' measure that the characteristic function of ";
   stack1 = ((helper = (helper = helpers.tex || (depth0 != null ? depth0.tex : depth0)) != null ? helper : alias1),(options={"name":"tex","hash":{},"fn":this.program(49, data, 0),"inverse":this.noop,"data":data}),(typeof helper === alias2 ? helper.call(depth0,options) : helper));
   if (!helpers.tex) { stack1 = alias3.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }

@@ -325,7 +325,6 @@ $('body').click(function(e){ //handle sidebar events
   }
 });
 $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is clicked*/
-  $('.progress').removeClass('hidden');
   var attributes = {};
   $('.projectInput').each(function() {
     var $ths = $(this);
@@ -343,12 +342,30 @@ $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is cl
     file: expressRoute[1],
     attributes: attributes
   });
+
+  var mdl = modal({
+    text: 'chart',//'creditRiskResearch'
+    hasOptions:expressRoute[1]==='firstHittingTime'
+  });
+  //console.log($(mdl)[2]);
+  var modalHtml=$(mdl)[2];
+  var $modal=$(modalHtml);
+  $modal.modal('show');
+  $modal.on('hidden.bs.modal', function(){
+    $modal.remove();
+    //$(this).data('bs.modal', null);
+  });
+  /*$($(mdl)[2]).on('hidden.bs.modal', function () {
+    $(this).data('bs.modal', null);
+  });*/
+  //$('.progress').removeClass('hidden');
 });
 socket.on('update', function(data) {
   $('#progressBar').css("width", data);
 });
 socket.on('result', function(data) {
   chart = "";
+  //socket.removeAllListeners();
   $('#progressBar').css("width", '0%');
   $('.progress').addClass('hidden');
   //console.log(data);
@@ -363,6 +380,7 @@ socket.on('result', function(data) {
     })); /*select a chart*/
     $select.on('click', '.selectSeries', function(e) {
       e.preventDefault();
+      console.log("got here");
       handleSeriesClick(data, this);
     });
   }
@@ -378,8 +396,12 @@ $('#mainText').on('click', '#projectHelp', function(e) {
     text: currentLocation+'Research',//'creditRiskResearch'
     input:trackRecords[route].content[0].input
   });
-  console.log($(mdl)[2]);
-  $($(mdl)[2]).modal('show');
+  //console.log($(mdl)[2]);
+  $modal=$($(mdl)[2]);
+  $modal.modal('show');
+  $modal.on('hidden.bs.modal', function(){
+    $modal.remove();
+  });
 });
 
 /*end event handling */
@@ -402,7 +424,7 @@ function createChart(data) {
     }
     var xAxis = data.x.slice(nMin, nMax + 1);
     var yAxis = data.y.slice(nMin, nMax + 1);
-    $('#chartist').empty();
+    //$('#chartist').empty();
     chart = new Highcharts.Chart({
       chart: {
         type: 'spline',

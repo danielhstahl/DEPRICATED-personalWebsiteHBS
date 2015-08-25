@@ -1,29 +1,13 @@
-<div>
+<div class='row'>
   <div style='margin-top:40px;'>
-    <button id='projectHelp' class='btn btn-warning pull-right'>Explanation</button>
+
   </div>
   {{#each input}}
-    <div class="form-group">
+    <div class="form-group col-md-4 col-sm-6">
       <label for='{{id}}'>{{label}}</label>
       <input type='text' id='{{id}}' class='form-control projectInput' placeholder='{{placeholder}}'></input>
     </div>
   {{/each}}
 </div>
 <button id='execute' data-route='{{submitId}}' class='btn btn-primary'>Execute</button>
-<div style='height:50px;'></div>
-<div class='progress hidden'>
-  <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-</div>
-<div class='row'>
-  {{#if hasOptions}}
-    <div id='chartist' class='col-md-8'>
-
-    </div>
-    <div id='selection' class='col-md-4'>
-    </div>
-  {{else}}
-    <div id='chartist'>
-
-    </div>
-  {{/if}}
-</div>
+<button id='projectHelp' class='btn btn-warning pull-right'>Explanation</button>

@@ -32,6 +32,14 @@ var siteObj = [{
   displayName: "About"
 }, {
   content: [{
+    header: "Credit Risk",
+    text: "CreditRiskPaper",
+    researchUrl: '/assets/pdf/CreditRiskPaper.pdf'
+  }],
+  route: "research",
+  displayName: "Research"
+},{
+  content: [{
     header: "Projects",
     text: "projects",
     projects: [{
@@ -40,6 +48,7 @@ var siteObj = [{
       colMd: 4,
       content: [{
         text: "inputProject",
+        researchUrl: '/assets/pdf/CreditRiskPaper.pdf',
         input: [{
           label: "Number of Assets",
           placeholder: "100000",
@@ -107,37 +116,37 @@ var siteObj = [{
           id: "t",
           description:"Time horizon of the distribution of operational loss"
         }, {
-          label: "Speed of mean reversion of frequency distribution",
+          label: "Mean reversion of frequency",
           placeholder: ".4",
           id: "a",
           description: "The speed of mean reversion of the stochastic time process"
         }, {
-          label: "Volatility of frequency distribution",
+          label: "Volatility of frequency",
           placeholder: ".4",
           id: "sigma",
           description: "The volatility of the stochastic time process"
         }, {
-          label: "Level of frequency distribution",
+          label: "Level of frequency",
           placeholder: "100",
           id: "lambda",
-          description: "The long run expected level of the frequency distribution"
+          description: "The long run expectation of frequency"
         }, {
-          label: "Shape parameter of severity distribution",
+          label: "Shape parameter of severity",
           placeholder: "100",
           id: "c",
           description: "Shape parameter of the Gamma severity distribution"
         }, {
-          label: "Scale parameter of severity distribution",
+          label: "Scale parameter of severity",
           placeholder: "5",
           id: "d",
           description: "Scale parameter of the Gamma severity distribution"
         }, {
-          label: "Correlation between jumps and time",
+          label: "Correlation",
           placeholder: ".5",
           id: "delta",
           description: "While not strictly the correlation between jumps and time, this parameter is between [0, 1] and dictates the extent of the relationship between jumps and time."
         }, {
-          label: "Initial value of stochastic time process",
+          label: "Initial value of time",
           placeholder: "1",
           id: "v0",
           description: "Initial value of the stochastic time process"
@@ -337,38 +346,33 @@ $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is cl
       attributes[id] = Number(attributes[id]);
     }
   });
-  var expressRoute = $(this).attr('data-route').split("/");
+  var currentLocation=Path.routes.current;
+  var route=currentLocation.substring(2); //remove "/#"
+  var expressRoute=route.split("/");
+
   socket.emit(expressRoute[0], {
     file: expressRoute[1],
     attributes: attributes
   });
-
+  console.log(trackRecords[route].content[0]);
   var mdl = modal({
     text: 'chart',//'creditRiskResearch'
-    hasOptions:expressRoute[1]==='firstHittingTime'
+    hasOptions:trackRecords[route].content[0].hasOptions
   });
-  //console.log($(mdl)[2]);
   var modalHtml=$(mdl)[2];
   var $modal=$(modalHtml);
   $modal.modal('show');
   $modal.on('hidden.bs.modal', function(){
     $modal.remove();
-    //$(this).data('bs.modal', null);
   });
-  /*$($(mdl)[2]).on('hidden.bs.modal', function () {
-    $(this).data('bs.modal', null);
-  });*/
-  //$('.progress').removeClass('hidden');
 });
 socket.on('update', function(data) {
   $('#progressBar').css("width", data);
 });
 socket.on('result', function(data) {
   chart = "";
-  //socket.removeAllListeners();
   $('#progressBar').css("width", '0%');
   $('.progress').addClass('hidden');
-  //console.log(data);
   if (data.y) { /*then no "options"*/
     createChart(data);
   } else { /*has options, show on screen*/
@@ -391,11 +395,14 @@ $('#mainText').on('click', '#projectHelp', function(e) {
   var currLocArray=currentLocation.split("/");
   var route=currentLocation.substring(2);
   currentLocation=currLocArray[currLocArray.length-1];
-  console.log(trackRecords[route]);
-  var mdl = modal({
+  console.log(trackRecords[route].content[0]);
+  /*var mdl = modal({
+
     text: currentLocation+'Research',//'creditRiskResearch'
     input:trackRecords[route].content[0].input
-  });
+  });*/
+  trackRecords[route].content[0].text=currentLocation+'Research'; //make sure this is ok!!!
+  var mdl = modal(trackRecords[route].content[0]);
   //console.log($(mdl)[2]);
   $modal=$($(mdl)[2]);
   $modal.modal('show');

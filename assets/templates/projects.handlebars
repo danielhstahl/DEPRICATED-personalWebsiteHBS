@@ -1,8 +1,14 @@
 <div class="row">
 {{#each projects}}
-<div class="col-xs-12 col-md-{{colMd}}">
-  <a href="#/{{this.route}}" class="thumbnail">
-    <img src="{{this.src}}">
+<div class="col-xs-12 col-md-{{colMd}} " >
+
+  <a href="#/{{this.route}}" class="thumbnail card" style="background-image:url({{this.src}})">
+    <div class='opaque'>
+      <p>
+        {{this.name}}
+      </p>
+   </div>
+    <!--<img src="{{this.src}}">-->
   </a>
   </div>
 {{/each}}

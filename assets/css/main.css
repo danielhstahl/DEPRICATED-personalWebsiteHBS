@@ -55,23 +55,44 @@ h2 {
 }
 
 .thumbnail {
-  /*height:190px;*/
   overflow: hidden;
   height: 150px;
-  /*overflow: auto;*/
+
 }
 
-.thumbnail img {
-  /*height:150px;*/
-  /*width:100%;*/
+/*.thumbnail img {
+
   max-width: none;
   height: 100%;
-  /*background-size: 100% auto;*/
-}
-/*.fixedImageHeight{
-  height:180px;
+
 }*/
 
+label{
+  font-weight: normal !important;
+}
+.opaque{
+  opacity: 0.8;
+  background-color:white;
+  /*margin: 15%;*/
+}
+.opaque p{
+  /*margin:5%;*/
+  margin-top:20%;
+  padding:15px;
+  color:black;
+  text-align:center;
+  text-decoration: none;
+}
+.card:hover{
+  text-decoration: none;
+}
+
+.card{
+  background-repeat: no-repeat;
+  background-size: cover;
+/*  max-width: none;
+  height: 100%;*/
+}
 @media(max-width:767px) {
   /*for very small devices (phones) */
   #page-content-wrapper {

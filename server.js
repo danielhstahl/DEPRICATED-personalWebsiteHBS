@@ -42,7 +42,7 @@ io.on('connection', function(socket){
 
 });
 
-app.post('/stock', function(req, res){
+/*app.post('/stock', function(req, res){
   var stock=req.body.stock;
   http.get('http://finance.google.com/finance/info?client=ig&q='+stock+'&callback=?', function(result){
     var data="";
@@ -55,6 +55,6 @@ app.post('/stock', function(req, res){
     });
 
   });
-});
+});*/
 
 server.listen(port, ip);

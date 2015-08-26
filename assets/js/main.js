@@ -1,7 +1,7 @@
 var socket = io();
 var chart = ""; /*"global" chart variable*/
 /*begin site structure */
-var siteObj = [{
+var siteObj = [/*{
   content: [{
     header: "Productivity",
     text: "productivity"
@@ -14,7 +14,7 @@ var siteObj = [{
   }],
   route: "home",
   displayName: "Home"
-}, {
+}, */{
   content: [{
     header: "Summary",
     text: "summary"
@@ -28,8 +28,8 @@ var siteObj = [{
     header: "Model Risk",
     text: "modelRisk"
   }],
-  route: "about",
-  displayName: "About"
+  route: "home",
+  displayName: "Home"
 }, {
   content: [{
     header: "Credit Risk",
@@ -45,6 +45,7 @@ var siteObj = [{
     projects: [{
       route: "projects/creditRisk",
       src: "assets/images/creditRisk.jpg",
+      name:"Credit Risk",
       colMd: 4,
       content: [{
         text: "inputProject",
@@ -108,6 +109,7 @@ var siteObj = [{
       route: "projects/operationalRisk",
       src: "assets/images/operationalRisk.jpg",
       colMd: 4,
+      name:"Operational Risk",
       content: [{
         text: "inputProject",
         input: [{
@@ -174,6 +176,7 @@ var siteObj = [{
       route: "projects/firstHittingTime",
       src: "assets/images/stock-price.jpg",
       colMd: 4,
+      name:"First Hitting Time",
       content: [{
         text: "inputProject",
         input: [{
@@ -215,6 +218,7 @@ var siteObj = [{
         chartId: "firstHittingTime",
         hasOptions: true,
         submitId: "projects/firstHittingTime" /*this is used for communitcateing with server*/
+
       }]
     }],
 
@@ -293,7 +297,27 @@ function traverseDom() { /*gets any stock value and age*/
 
 function getStock(stock, element) { /*get stock values from name*/
   $.ajax({
-    url: '/stock',
+    url:'http://finance.google.com/finance/info?client=ig&q='+stock+'&callback=?',
+    method:'get',
+    dataType:'html',
+    success: function(data) {
+      data = data.replace(/\//g, "");
+      data = JSON.parse(data)[0];
+      console.log(data);
+      var objForTemplate = {
+        symbol: data.t,
+        price: data.l,
+        change: data.c,
+        up: data.c.substring(0, 1) !== '-'
+      }
+      var html = stockTemplate(objForTemplate);
+      element.prepend(html);
+    },
+    error:function(data, st, err){
+      console.log(err);
+    }
+  });
+    /*url: '/stock',
     method: 'post',
     data: JSON.stringify({
       stock: stock
@@ -310,9 +334,9 @@ function getStock(stock, element) { /*get stock values from name*/
       }
       var html = stockTemplate(objForTemplate);
       element.prepend(html);
-    }
+    }*/
 
-  });
+  //});
 
 }
 /*end utility functions */
@@ -340,10 +364,10 @@ $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is cl
     var id = $ths.attr('id');
     attributes[id] = $ths.val();
     var nbr = Number(attributes[id]);
-    if (!nbr) {
+    if (!attributes[id]) {
       attributes[id] = Number($ths.attr('placeholder'));
     } else {
-      attributes[id] = Number(attributes[id]);
+      attributes[id] = nbr;
     }
   });
   var currentLocation=Path.routes.current;
@@ -401,8 +425,9 @@ $('#mainText').on('click', '#projectHelp', function(e) {
     text: currentLocation+'Research',//'creditRiskResearch'
     input:trackRecords[route].content[0].input
   });*/
-  trackRecords[route].content[0].text=currentLocation+'Research'; //make sure this is ok!!!
+  trackRecords[route].content[0].text=currentLocation+'Research'; //change route
   var mdl = modal(trackRecords[route].content[0]);
+  trackRecords[route].content[0].text=currentLocation; //change back
   //console.log($(mdl)[2]);
   $modal=$($(mdl)[2]);
   $modal.modal('show');

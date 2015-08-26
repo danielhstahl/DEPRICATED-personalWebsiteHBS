@@ -800,11 +800,15 @@ templates['projects'] = template({"1":function(depth0,helpers,partials,data) {
 
   return "<div class=\"col-xs-12 col-md-"
     + alias1(((helper = (helper = helpers.colMd || (depth0 != null ? depth0.colMd : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"colMd","hash":{},"data":data}) : helper)))
-    + "\">\n  <a href=\"#/"
+    + " \" >\n\n  <a href=\"#/"
     + alias1(alias2((depth0 != null ? depth0.route : depth0), depth0))
-    + "\" class=\"thumbnail\">\n    <img src=\""
+    + "\" class=\"thumbnail card\" style=\"background-image:url("
     + alias1(alias2((depth0 != null ? depth0.src : depth0), depth0))
-    + "\">\n  </a>\n  </div>\n";
+    + ")\">\n    <div class='opaque'>\n      <p>\n        "
+    + alias1(alias2((depth0 != null ? depth0.name : depth0), depth0))
+    + "\n      </p>\n   </div>\n    <!--<img src=\""
+    + alias1(alias2((depth0 != null ? depth0.src : depth0), depth0))
+    + "\">-->\n  </a>\n  </div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 

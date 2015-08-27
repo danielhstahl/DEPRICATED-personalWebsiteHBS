@@ -300,12 +300,13 @@ function getStock(stock, element) { /*get stock values from name*/
     url:'http://finance.google.com/finance/info?client=ig&q='+stock+'&callback=?',
     method:'get',
     crossDomain: true,
-    //dataType: 'jsonp',
-    dataType:'html',
+    dataType: 'jsonp',
+    //dataType:'html',
     success: function(data) {
-      data = data.replace(/\//g, "");
-      data = JSON.parse(data)[0];
       console.log(data);
+      //data = data.replace(/\//g, "");
+      //data = JSON.parse(data)[0];
+      data=data[0];
       var objForTemplate = {
         symbol: data.t,
         price: data.l,

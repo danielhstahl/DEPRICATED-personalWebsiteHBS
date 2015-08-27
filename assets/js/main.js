@@ -299,6 +299,8 @@ function getStock(stock, element) { /*get stock values from name*/
   $.ajax({
     url:'http://finance.google.com/finance/info?client=ig&q='+stock+'&callback=?',
     method:'get',
+    crossDomain: true,
+    //dataType: 'jsonp',
     dataType:'html',
     success: function(data) {
       data = data.replace(/\//g, "");

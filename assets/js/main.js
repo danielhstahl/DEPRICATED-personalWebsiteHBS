@@ -428,9 +428,10 @@ $('#mainText').on('click', '#projectHelp', function(e) {
     text: currentLocation+'Research',//'creditRiskResearch'
     input:trackRecords[route].content[0].input
   });*/
+  var oldLocation=trackRecords[route].content[0].text;
   trackRecords[route].content[0].text=currentLocation+'Research'; //change route
   var mdl = modal(trackRecords[route].content[0]);
-  trackRecords[route].content[0].text=currentLocation; //change back
+  trackRecords[route].content[0].text=oldLocation; //change back
   //console.log($(mdl)[2]);
   $modal=$($(mdl)[2]);
   $modal.modal('show');

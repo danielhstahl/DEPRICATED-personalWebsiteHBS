@@ -59,7 +59,9 @@ h2 {
   height: 150px;
 
 }
-
+/*.modal{
+  width:90%;
+}*/
 /*.thumbnail img {
 
   max-width: none;
@@ -77,7 +79,7 @@ label{
 }
 .opaque p{
   /*margin:5%;*/
-  margin-top:20%;
+  margin-top:40px; /*no percentage because height is fixed (thumbnail at 150px) */
   padding:15px;
   color:black;
   text-align:center;

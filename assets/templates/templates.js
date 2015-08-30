@@ -533,7 +533,7 @@ templates['operationalRiskResearch'] = template({"1":function(depth0,helpers,par
 },"79":function(depth0,helpers,partials,data) {
     return "\\begin{cases}\n\\frac{\\partial \\beta}{\\partial t}=a \\beta+\\lambda-\\lambda{E}[e^{(ui+\\delta \\beta)L}]-\\frac{1}{2} \\sigma^2 \\beta^2 & \\beta(T, T)=0\\\\\n\\frac{\\partial \\alpha}{\\partial t}=-a\\bar{b} \\beta & \\alpha(T, T)=0\n\\end{cases} ";
 },"81":function(depth0,helpers,partials,data) {
-    return "\\begin{cases}\n\\beta_{j+1}=\\beta_j -\\Delta t \\left(a\\beta_j+\\lambda-\\lambda(1-c ui)^{-d}(1-\\hat{c}\\beta_j \\delta )^{-d}-\\frac{1}{2} \\sigma^2 \\beta_j^2 \\right)& \\beta_0=0\\\\\n\\alpha_{j+1}=\\alpha_j+\\Delta t a\\bar{b} \\beta_j & \\alpha_0=0\n\n\\end{cases}\n";
+    return "\\begin{cases}\n\\beta_{j+1}=\\beta_j -\\Delta t \\left(a\\beta_j+\\lambda-\\lambda{E}[e^{(ui+\\delta \\beta)L}]-\\frac{1}{2} \\sigma^2 \\beta_j^2 \\right)& \\beta_0=0\\\\\n\\alpha_{j+1}=\\alpha_j+\\Delta t a\\bar{b} \\beta_j & \\alpha_0=0\n\n\\end{cases}\n";
 },"83":function(depth0,helpers,partials,data) {
     return "\\Delta t=t/n";
 },"85":function(depth0,helpers,partials,data) {
@@ -800,7 +800,7 @@ templates['projects'] = template({"1":function(depth0,helpers,partials,data) {
 
   return "<div class=\"col-xs-12 col-md-"
     + alias1(((helper = (helper = helpers.colMd || (depth0 != null ? depth0.colMd : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"colMd","hash":{},"data":data}) : helper)))
-    + " \" >\n\n  <a href=\"#/"
+    + " col-sm-6\" >\n\n  <a href=\"#/"
     + alias1(alias2((depth0 != null ? depth0.route : depth0), depth0))
     + "\" class=\"thumbnail card\" style=\"background-image:url("
     + alias1(alias2((depth0 != null ? depth0.src : depth0), depth0))

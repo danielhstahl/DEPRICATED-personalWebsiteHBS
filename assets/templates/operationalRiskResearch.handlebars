@@ -73,7 +73,7 @@ The ODEs can be numerically solved.  A very basic scheme is Euler's finite diffe
 
 {{#tex true}}
 \begin{cases}
-\beta_{j+1}=\beta_j -\Delta t \left(a\beta_j+\lambda-\lambda(1-c ui)^{-d}(1-\hat{c}\beta_j \delta )^{-d}-\frac{1}{2} \sigma^2 \beta_j^2 \right)& \beta_0=0\\
+\beta_{j+1}=\beta_j -\Delta t \left(a\beta_j+\lambda-\lambda{E}[e^{(ui+\delta \beta)L}]-\frac{1}{2} \sigma^2 \beta_j^2 \right)& \beta_0=0\\
 \alpha_{j+1}=\alpha_j+\Delta t a\bar{b} \beta_j & \alpha_0=0
 
 \end{cases}

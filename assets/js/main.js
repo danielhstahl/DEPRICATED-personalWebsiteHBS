@@ -133,15 +133,20 @@ var siteObj = [/*{
           id: "lambda",
           description: "The long run expectation of frequency"
         }, {
-          label: "Shape parameter of severity",
-          placeholder: "100",
-          id: "c",
-          description: "Shape parameter of the Gamma severity distribution"
+          label: "Alpha for Stable Severity",
+          placeholder: "1.1",
+          id: "alphaStable",
+          description: "Alpha parameter of stable distribution.  Should be between 1 and 2."
         }, {
-          label: "Scale parameter of severity",
-          placeholder: "5",
-          id: "d",
-          description: "Scale parameter of the Gamma severity distribution"
+          label: "Shift for Severity",
+          placeholder: "1300",
+          id: "muStable",
+          description: "Shifts stable distribution along axis.  Should be large enough so that the probability of a negative number is infinitesimal."
+        },{
+          label: "Scale for Severity",
+          placeholder: "100",
+          id: "cStable",
+          description: "Scales the width of the stable distribution.  Should be small enough so that the probability of a negative number is infinitesimal."
         }, {
           label: "Correlation",
           placeholder: ".5",
@@ -422,7 +427,7 @@ $('#mainText').on('click', '#projectHelp', function(e) {
   var currLocArray=currentLocation.split("/");
   var route=currentLocation.substring(2);
   currentLocation=currLocArray[currLocArray.length-1];
-  console.log(trackRecords[route].content[0]);
+  //console.log(trackRecords[route].content[0]);
   /*var mdl = modal({
 
     text: currentLocation+'Research',//'creditRiskResearch'
@@ -445,8 +450,10 @@ $('#mainText').on('click', '#projectHelp', function(e) {
 /*chart functions */
 
 function createChart(data) {
+  console.log(data);
   if (isNaN(data.y[0]) || Math.abs(data.y[0]) > 100) { /*something bad happened in the algorithm...*/
     console.log("problem!");
+
   } else {
     var n = data.x.length;
     var nMin = 0;

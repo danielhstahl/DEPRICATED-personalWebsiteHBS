@@ -74,7 +74,7 @@ io.on('connection', function(socket){
   });
   socket.on('testDB', function(data){
     myDatabase.test(function(isConnect){
-      io.emit('dbCheck', isConnect)
+      io.emit('dbCheck', {isConnect:isConnect});
     });
   });
   socket.on('updateDataBase', function(data){ //update database configuration

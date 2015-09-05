@@ -7,6 +7,26 @@ templates['CreditRiskPaper'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main"
     + this.escapeExpression(((helper = (helper = helpers.researchUrl || (depth0 != null ? depth0.researchUrl : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"researchUrl","hash":{},"data":data}) : helper)))
     + "'>Upcoming Publication in December edition Journal of Credit Risk </a>\n";
 },"useData":true});
+templates['admin'] = template({"1":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.chartType : depth0),{"name":"each","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\n";
+},"2":function(depth0,helpers,partials,data) {
+    return "    <div id='"
+    + this.escapeExpression(this.lambda((depth0 != null ? depth0.id : depth0), depth0))
+    + "'>\n    </div>\n";
+},"4":function(depth0,helpers,partials,data) {
+    var helper;
+
+  return "  <form id='"
+    + this.escapeExpression(((helper = (helper = helpers.authenticateId || (depth0 != null ? depth0.authenticateId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"authenticateId","hash":{},"data":data}) : helper)))
+    + "'>\n    <div class='form-group'>\n      <label for='userName'>User Name</label>\n      <input type='text' class='form-control' id='userName'></input>\n    </div>\n    <div class='form-group'>\n      <label for='password'>Password</label>\n      <input type='password' class='form-control' id='password'></input>\n    </div>\n    <button type='submit' class='btn btn-primary'>Submit</button>\n  </form>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.authenticated : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.program(4, data, 0),"data":data})) != null ? stack1 : "");
+},"useData":true});
 templates['analytics'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "Audit Analytics provides data services to Audit Services to facilitate audit testing.  These data services involve creating visualizations to make the underlying data accessible and actionable to Audit Services, automating audit testing, and providing self-service tools for auditors to dynamically explore the data.  Audit provides a unique opportunity for analyzing data.  Audit's mandate is to independently access bank data sources in order to provide assurance around the bank's processes.  Hence all the bank's data is available for Audit Analytics to mine.  These data sources can be as diverse as system access data (for example, using active directory), portfolio data at the loan level, and transactional data for wires.\n";
 },"useData":true});
@@ -51,6 +71,15 @@ templates['creditRiskResearch'] = template({"1":function(depth0,helpers,partials
 },"useData":true});
 templates['dataManagement'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "The purpose of data is to deliver information to humans in an actionable form. This purpose implies data availability, data integrity, and data connectivity.  To help achieve this purpose, I have self-imposed the following criteria:\r<ul>\r<li>Every data table that I create will have a primary key.  </li>\r<li>In the nearly universal case that more than one table is required to maintain efficient and normalized data, every pertinent table will have at least one foreign key. </li>\r</ul>\r\r\nThis purpose also precludes humans from ever altering, viewing, or touching data at any granular level.  Humans were not intended to accurately and efficiently process data.\r\n";
+},"useData":true});
+templates['editDB'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<h3>Update DB credentials</h3>\n<form id='"
+    + alias3(((helper = (helper = helpers.dbChangeId || (depth0 != null ? depth0.dbChangeId : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"dbChangeId","hash":{},"data":data}) : helper)))
+    + "'>\n  <div class='form-group'>\n    <label for='ip'>Ip</label>\n    <input type='text' class='form-control' id='ip'></input>\n  </div>\n  <div class='form-group'>\n    <label for='port'>Port</label>\n    <input type='text' class='form-control' id='port'></input>\n  </div>\n  <div class='form-group'>\n    <label for='collection'>Collections</label>\n    <input type='text' class='form-control' id='collection'></input>\n  </div>\n  <div class='form-group'>\n    <label for='db'>Database</label>\n    <input type='text' class='form-control' id='db'></input>\n  </div>\n  <div class='form-group'>\n    <label for='userDB'>User</label>\n    <input type='text' class='form-control' id='userDB'></input>\n  </div>\n  <div class='form-group'>\n    <label for='passworDB'>Password</label>\n    <input type='password' class='form-control' id='passworDB'></input>\n  </div>\n    <button type='submit' class='btn btn-primary'>Submit</button>\n    <!--<button id='"
+    + alias3(((helper = (helper = helpers.dbTestId || (depth0 != null ? depth0.dbTestId : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"dbTestId","hash":{},"data":data}) : helper)))
+    + "' class='btn btn-primary'>Test</button>-->\n\n</form>\n";
 },"useData":true});
 templates['firstHittingTimeResearch'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;

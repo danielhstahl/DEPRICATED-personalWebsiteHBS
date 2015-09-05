@@ -1,0 +1,154 @@
+<html>
+    <head>
+        <script src='/socket.io/socket.io.js'></script>
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <!--<script src="http://code.highcharts.com/highcharts.js"></script>-->
+        <script src="/assets/js/highchartsCustom.js"></script>
+        <script src="/assets/js/handlebars-v3.0.3.js"></script>
+        <script src="/assets/templates/templates.js"></script>
+
+        <!--<script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://dimplejs.org/dist/dimple.v2.1.2.min.js"></script>-->
+    </head>
+    <body>
+      <div class='container'>
+        <div id='main'>
+          <!--<div id='chartByPage'></div>
+          <div id='chartByAvg'></div>-->
+        </div>
+
+      </div>
+
+    </body>
+    <script type='text/javascript'>
+      var socket = io();
+      socket.emit('testDB'); //test DB connection
+      var dbChangeId='submitDBChange';
+      //var dbTestId='testDBChange';
+      var submitAuthenticationId='submitAuthenticate';
+      var siteMap=[
+        {
+          type:'bar',
+          id:'chartByPage',
+          noSql:{
+            where:{page:{$ne:null}},
+            groupBy:"$page",
+            aggregateField:1,
+            groupType:"sum"/*,
+            project:{_id:"name", "y":1}*/
+          } //sum over '1' is the same as sql's count
+        },
+        {
+          type:'bar',
+          id:'chartByAvg', //average total time spent on site
+          noSql:{
+            where:{dateLeft:{$ne:null}},
+            groupBy:"$ip",
+            aggregateField:{$subtract:["$dateLeft", "$dateEntered"]},
+            groupType:"avg"
+          }
+        },
+        {
+          type:'timeseries', //hits by date
+          id:'chartByTime',
+          noSql:{
+            where:{dateLeft:{$ne:null}},
+            groupBy:{"year":{"$year":"$dateLeft"}, "month":{"$month":"$dateLeft"}, "day":{"$dayOfMonth":"$dateLeft"}},
+            aggregateField:1,
+            groupType:"sum"/*,
+            project:{"$project": {
+                y:{$concat:["$year", ]}
+              }
+            }*/
+          }
+        }
+      ];
+      Handlebars.partials = Handlebars.templates;
+      var template = Handlebars.templates['admin'];
+      var editDB = Handlebars.templates['editDB'];
+      socket.on('dbCheck', function(data){
+        console.log("got here");
+        if(data){ //connection succeeded
+          $('#main').html(template({authenticated:false, chartType:siteMap, authenticateId:submitAuthenticationId}));
+
+        }
+        else {
+          $('#main').html(editDB({dbChangeId:dbChangeId}));
+        }
+      });
+
+      //$('#updateData').html(editDB({dbChangeId:dbChangeId}));
+
+      //$('#main').on('submit', '#'+submitAuthenticationId, function(e){
+      $('#main').on('submit', '#'+submitAuthenticationId, function(e){
+        //e.preventDefault();
+        //alert("got here");
+        socket.emit('authenticate', {user:$('#userName').val(), password:$('#password').val()});
+        return false;
+      });
+      //$('#'+dbChangeId).submit(function(e){
+      $('#main').on('submit', '#'+dbChangeId, function(e){
+        var options={};
+        $('.form-control').each(function(index, value){
+          var $self=$(this);
+          if($self.val()){
+            options[$self.attr('id')]=$self.val();
+
+          }
+
+        });
+        console.log(options);
+        /*var options={
+          ip:$('#ip').val(),
+          port:$('#port').val(),
+          collection:$('#collection').val(),
+          db:$('#db').val(),
+          user:$('#userDB').val(),
+          password:$('#passwordDB').val()
+        }*/
+        socket.emit('updateDataBase', options);
+        return false;
+      });
+    /*  $('#'+dbTestId).submit(function(e){
+        socket.emit('authenticate', {user:$('#userName').val(), password:$('#password').val()});
+        return false;
+      });*/
+      socket.on('updateChart', function(data){
+
+      });
+      socket.on('fullChartData', function(data){
+        console.log(data);
+        var n=data.length;
+        for(var i=0; i<n;i++){
+          //data[i].type;
+          //console.log(data)
+          createChart(data[i].id, data[i].data);
+        }
+      });
+      socket.on('authenticate', function(data){
+        console.log(data);
+        if(data.group==='admin'){
+          $('#main').html(template({authenticated:true, chartType:siteMap, authenticateId:submitAuthenticationId}));
+          socket.emit('requestChartData', siteMap);
+        }
+        else{
+          alert("Login Failed!");
+        }
+      });
+      function createChart(id, data){
+        $('#'+id).highcharts({
+          xAxis:{
+            type:'category'
+          },
+          series:[{
+            type:'column',
+            data:data
+          }]
+        })
+      }
+    </script>
+
+
+</html>

@@ -268,6 +268,9 @@ function iterate(val) {
 }
 function createContent(record) {
   Path.map("#/" + record.route).to(function() {
+    socket.emit('pageLoad', {
+      file: record.route
+    });
     var $mainText = $('#mainText');
     $mainText.html("");
     trackRecords[record.route]=record;

@@ -93,7 +93,7 @@ io.on('connection', function(socket){
         //  app.render('admin', {isConnect:isConnect}); //will this work????...no
         //}
         //else{
-      io.emit('dbCheck', isConnect);
+      io.emit('dbCheck', {isConnect:isConnect, mongoDB:myDatabase.returnOptions()});
         //}
 
     });

@@ -166,6 +166,7 @@ io.on('connection', function(socket) {
     var n = clientObject.length;
     for (var i = 0; i < n; i++) {
       clientObject[i].noSql.indicator = clientObject[i].id;
+      clientObject[i].noSql.title = clientObject[i].title;
       myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
         if(options==='error'){
           io.emit('chartError', data);
@@ -173,7 +174,8 @@ io.on('connection', function(socket) {
         else {
           dataObj.push({
             id: options.indicator,
-            data: data
+            data: data,
+            title:options.title
           });
           if (dataObj.length === n) {
             io.emit('fullChartData', dataObj);

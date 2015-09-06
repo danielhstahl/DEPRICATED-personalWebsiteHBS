@@ -31,6 +31,7 @@
       var siteMap=[
         {
           type:'bar',
+          title:'Page Views',
           id:'chartByPage',
           noSql:{
             where:{page:{$ne:null}},
@@ -43,6 +44,7 @@
         {
           type:'bar',
           id:'chartByAvg', //average total time spent on site
+          title:'Average Session',
           noSql:{
             where:{dateLeft:{$ne:null}},
             groupBy:"$ip",
@@ -53,9 +55,10 @@
         {
           type:'timeseries', //hits by date
           id:'chartByTime',
+          title:'Views by Date',
           noSql:{
             where:{dateLeft:{$ne:null}},
-            groupBy:{"year":{"$year":"$dateLeft"}, "month":{"$month":"$dateLeft"}, "day":{"$dayOfMonth":"$dateLeft"}},
+            groupBy:{"year":{"$year":"$dateEntered"}, "month":{"$month":"$dateEntered"}, "day":{"$dayOfMonth":"$dateEntered"}},
             aggregateField:1,
             groupType:"sum"/*,
             project:{"$project": {
@@ -101,18 +104,15 @@
       });
 
       socket.on('updateChart', function(data){
-
+        console.log(data);//see what is happening when user disconnects
       });
       socket.on('chartError', function(data){
         console.log(data);
       });
       socket.on('fullChartData', function(data){
-        console.log(data);
         var n=data.length;
         for(var i=0; i<n;i++){
-          //data[i].type;
-          //console.log(data)
-          createChart(data[i].id, data[i].data);
+          createChart(data[i]);
         }
       });
       socket.on('authenticate', function(data){
@@ -120,32 +120,26 @@
         if(data.group==='admin'){
           $('#main').html(template({authenticated:true, chartType:siteMap, authenticateId:submitAuthenticationId}));
           socket.emit('requestChartData', siteMap);
-          /*$.ajax({
-            url:"/getChartData",
-            type:'POST',
-            contentType:'application/json',
-            dataType:'json',
-            data:JSON.stringify(siteMap),
-            success:function(data){
-              console.log(data);
-            },
-            error:function(error){
-              console.log(error);
-            }
-          });*/
         }
         else{
           alert("Login Failed!");
         }
       });
-      function createChart(id, data){
-        $('#'+id).highcharts({
+      function createChart(chartData){
+        $('#'+chartData.id).highcharts({
+          credits:false,
+          title:{
+            text:chartData.title
+          },
           xAxis:{
             type:'category'
           },
+          legend:{
+            enabled:false
+          },
           series:[{
             type:'column',
-            data:data
+            data:chartData.data
           }]
         })
       }

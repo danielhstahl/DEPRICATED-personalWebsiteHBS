@@ -68,8 +68,10 @@ app.get('/admin', function(req, res) {
 /*end page rendering */
 io.on('connection', function(socket) {
   //var address = socket.handshake.address;
+  var req=socket.request;
   //var address = socket.request.connection._peername.address ;
-  var address = socket.request.connection.remoteAddress ;
+  var address = req.headers['x-forwarded-for'] || req.connection._peername.address || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+  //var address = socket.request.connection.remoteAddress ;
   //console.log( socket.request.connection.remoteAddress );
   socket.on('projects', function(data) { //if "submit" is clicked ona  project page
     var fork = require('child_process').fork; //asynced child process
@@ -156,29 +158,32 @@ io.on('connection', function(socket) {
       }
     });
   });
-  socket.on('requestChartData', function(clientObject) {
-    var dataObj = [];
-    var n = clientObject.length;
-    for (var i = 0; i < n; i++) {
-      clientObject[i].noSql.indicator = clientObject[i].id;
-      myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
-        if(options==='error'){
-          io.emit('chartError', data);
-        }
-        else {
-          dataObj.push({
-            id: options.indicator,
-            data: data
-          });
-          if (dataObj.length === n) {
-            io.emit('fullChartData', dataObj);
-          }
-        }
 
-      });
-    }
-  });
 
 });
+//socket.on('requestChartData', function(clientObject) {
+app.post('/getChartData', function(req, res){
+  var dataObj = [];
+  var clientObject=req.body;
+  //console.log(clientObject);
+  var n = clientObject.length;
+  for (var i = 0; i < n; i++) {
+    clientObject[i].noSql.indicator = clientObject[i].id;
+    myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
+      if(options==='error'){
+        io.emit('chartError', data);
+      }
+      else {
+        dataObj.push({
+          id: options.indicator,
+          data: data
+        });
+        if (dataObj.length === n) {
+          io.emit('fullChartData', dataObj);
+        }
+      }
 
+    });
+  }
+});
 server.listen(port, ip);

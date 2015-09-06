@@ -32,10 +32,9 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) { //openshift support
 var myDatabase = new mongoUtils(MongoClient, {
   url: getMongoAddress(mongoParameters.userDB, mongoParameters.passwordDB, mongoParameters.ip, mongoParameters.port, mongoParameters.db),
   collections: mongoParameters.collection
-}); //some defaults?
+}); //some defaults
 
 function getMongoAddress(user, password, ip, port, db) {
-  //console.log("mongodb://"+user+":"+password+"@"+ip+":"+port+"/"+db);
   if (user) {
     user = user + ":";
   }
@@ -67,12 +66,8 @@ app.get('/admin', function(req, res) {
 });
 /*end page rendering */
 io.on('connection', function(socket) {
-  //var address = socket.handshake.address;
   var req=socket.request;
-  //var address = socket.request.connection._peername.address ;
   var address = req.headers['x-forwarded-for'] || req.connection._peername.address || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
-  //var address = socket.request.connection.remoteAddress ;
-  //console.log( socket.request.connection.remoteAddress );
   socket.on('projects', function(data) { //if "submit" is clicked ona  project page
     var fork = require('child_process').fork; //asynced child process
     console.log(JSON.stringify(data));
@@ -159,10 +154,7 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('requestChartData', function(clientObject) {
-  //app.post('/getChartData', function(req, res){
     var dataObj = [];
-    //var clientObject=req.body;
-    //console.log(clientObject);
     var n = clientObject.length;
     for (var i = 0; i < n; i++) {
       clientObject[i].noSql.indicator = clientObject[i].id;

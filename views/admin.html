@@ -33,39 +33,41 @@
           type:'bar',
           title:'Page Views',
           id:'chartByPage',
-          noSql:{
-            where:{page:{$ne:null}},
-            groupBy:"$page",
-            aggregateField:1,
-            groupType:"sum"/*,
-            project:{_id:"name", "y":1}*/
-          } //sum over '1' is the same as sql's count
+          noSql:[
+            {$match:{page:{$ne:null}}},
+            {$group:{_id:"$page", "y":{$sum:1}}}
+          ]//sum over '1' is the same as sql's count
         },
         {
           type:'bar',
           id:'chartByAvg', //average total time spent on site
           title:'Average Session',
-          noSql:{
-            where:{dateLeft:{$ne:null}},
-            groupBy:"$ip",
-            aggregateField:{$subtract:["$dateLeft", "$dateEntered"]},
-            groupType:"avg"
-          }
+          noSql:[
+            {$match:{dateLeft:{$ne:null}}},
+            {$group:{_id:"$ip", "y":{$avg:{$subtract:["$dateLeft", "$dateEntered"]}}}}
+          ]
         },
         {
           type:'timeseries', //hits by date
           id:'chartByTime',
           title:'Views by Date',
-          noSql:{
-            where:{dateLeft:{$ne:null}},
-            groupBy:{"year":{"$year":"$dateEntered"}, "month":{"$month":"$dateEntered"}, "day":{"$dayOfMonth":"$dateEntered"}},
-            aggregateField:1,
-            groupType:"sum"/*,
-            project:{"$project": {
-                y:{$concat:["$year", ]}
-              }
-            }*/
-          }
+          noSql:[
+            {$match:{dateEntered:{$ne:null}}},
+            {$group:{"_id":{"year":{"$year":"$dateEntered"}, "month":{"$month":"$dateEntered"}, "day":{"$dayOfMonth":"$dateEntered"}, "ip":"$ip"}, "y":{$sum:1}}},
+            {$group:{"_id":{"year":"$_id.year", "month":"$_id.month", "day":"$_id.day"}, "y":{$sum:1}   }}
+
+            //{$group:{"_id":"$ip", "y":{$avg:{"year":{"$year":"$dateEntered"}, "month":{"$month":"$dateEntered"}, "day":{"$dayOfMonth":"$dateEntered"}}}}}
+          ]
+        },
+        {
+          type:'bar', //unique hits
+          id:'chartByIP',
+          title:'Distinct IP addresses',
+          noSql:[
+            {$match:{dateEntered:{$ne:null}}},
+            {$group : {"_id" : "$ip"} },
+            {$group : {"_id" : "distinct", "y":{$sum:1}}} //this is weird that it works...
+          ]
         }
       ];
       Handlebars.partials = Handlebars.templates;
@@ -111,6 +113,7 @@
       });
       socket.on('fullChartData', function(data){
         var n=data.length;
+        console.log(data);
         for(var i=0; i<n;i++){
           createChart(data[i]);
         }

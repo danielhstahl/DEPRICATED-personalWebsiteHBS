@@ -67,7 +67,10 @@ app.get('/admin', function(req, res) {
 });
 /*end page rendering */
 io.on('connection', function(socket) {
-  var address = socket.handshake.address;
+  //var address = socket.handshake.address;
+  //var address = socket.request.connection._peername.address ;
+  var address = socket.request.connection.remoteAddress ;
+  //console.log( socket.request.connection.remoteAddress );
   socket.on('projects', function(data) { //if "submit" is clicked ona  project page
     var fork = require('child_process').fork; //asynced child process
     console.log(JSON.stringify(data));
@@ -159,12 +162,17 @@ io.on('connection', function(socket) {
     for (var i = 0; i < n; i++) {
       clientObject[i].noSql.indicator = clientObject[i].id;
       myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
-        dataObj.push({
-          id: options.indicator,
-          data: data
-        });
-        if (dataObj.length === n) {
-          io.emit('fullChartData', dataObj);
+        if(options==='error'){
+          io.emit('chartError', data);
+        }
+        else {
+          dataObj.push({
+            id: options.indicator,
+            data: data
+          });
+          if (dataObj.length === n) {
+            io.emit('fullChartData', dataObj);
+          }
         }
 
       });

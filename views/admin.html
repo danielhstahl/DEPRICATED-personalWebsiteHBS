@@ -79,16 +79,11 @@
         }
       });
 
-      //$('#updateData').html(editDB({dbChangeId:dbChangeId}));
-
-      //$('#main').on('submit', '#'+submitAuthenticationId, function(e){
       $('#main').on('submit', '#'+submitAuthenticationId, function(e){
-        //e.preventDefault();
-        //alert("got here");
         socket.emit('authenticate', {user:$('#userName').val(), password:$('#password').val()});
         return false;
       });
-      //$('#'+dbChangeId).submit(function(e){
+
       $('#main').on('submit', '#'+dbChangeId, function(e){
         var options={};
         $('.form-control').each(function(index, value){
@@ -100,23 +95,16 @@
 
         });
         console.log(options);
-        /*var options={
-          ip:$('#ip').val(),
-          port:$('#port').val(),
-          collection:$('#collection').val(),
-          db:$('#db').val(),
-          user:$('#userDB').val(),
-          password:$('#passwordDB').val()
-        }*/
+
         socket.emit('updateDataBase', options);
         return false;
       });
-    /*  $('#'+dbTestId).submit(function(e){
-        socket.emit('authenticate', {user:$('#userName').val(), password:$('#password').val()});
-        return false;
-      });*/
+
       socket.on('updateChart', function(data){
 
+      });
+      socket.on('chartError', function(data){
+        console.log(data);
       });
       socket.on('fullChartData', function(data){
         console.log(data);

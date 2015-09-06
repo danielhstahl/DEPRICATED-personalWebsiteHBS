@@ -103,9 +103,9 @@
       socket.on('updateChart', function(data){
 
       });
-      //socket.on('chartError', function(data){
-        //console.log(data);
-      //});
+      socket.on('chartError', function(data){
+        console.log(data);
+      });
       socket.on('fullChartData', function(data){
         console.log(data);
         var n=data.length;
@@ -119,8 +119,8 @@
         console.log(data);
         if(data.group==='admin'){
           $('#main').html(template({authenticated:true, chartType:siteMap, authenticateId:submitAuthenticationId}));
-          //socket.emit('requestChartData', siteMap);
-          $.ajax({
+          socket.emit('requestChartData', siteMap);
+          /*$.ajax({
             url:"/getChartData",
             type:'POST',
             contentType:'application/json',
@@ -132,7 +132,7 @@
             error:function(error){
               console.log(error);
             }
-          });
+          });*/
         }
         else{
           alert("Login Failed!");

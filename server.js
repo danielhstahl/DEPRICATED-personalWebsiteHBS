@@ -158,32 +158,32 @@ io.on('connection', function(socket) {
       }
     });
   });
-
-
-});
-//socket.on('requestChartData', function(clientObject) {
-app.post('/getChartData', function(req, res){
-  var dataObj = [];
-  var clientObject=req.body;
-  //console.log(clientObject);
-  var n = clientObject.length;
-  for (var i = 0; i < n; i++) {
-    clientObject[i].noSql.indicator = clientObject[i].id;
-    myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
-      if(options==='error'){
-        io.emit('chartError', data);
-      }
-      else {
-        dataObj.push({
-          id: options.indicator,
-          data: data
-        });
-        if (dataObj.length === n) {
-          io.emit('fullChartData', dataObj);
+  socket.on('requestChartData', function(clientObject) {
+  //app.post('/getChartData', function(req, res){
+    var dataObj = [];
+    //var clientObject=req.body;
+    //console.log(clientObject);
+    var n = clientObject.length;
+    for (var i = 0; i < n; i++) {
+      clientObject[i].noSql.indicator = clientObject[i].id;
+      myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
+        if(options==='error'){
+          io.emit('chartError', data);
         }
-      }
+        else {
+          dataObj.push({
+            id: options.indicator,
+            data: data
+          });
+          if (dataObj.length === n) {
+            io.emit('fullChartData', dataObj);
+          }
+        }
 
-    });
-  }
+      });
+    }
+  });
+
 });
+
 server.listen(port, ip);

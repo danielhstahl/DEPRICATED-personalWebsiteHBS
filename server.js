@@ -13,6 +13,15 @@ var ip=process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1"; //for openshift support
 var server  = http.createServer(app); //required fro socket.io
 var io= require('socket.io').listen(server);
 var mongoParameters={userDB:'', passwordDB:'', ip:'192.168.0.1', port:27017, db:"myTestDB", collection:'AppSite'};
+
+if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){ //openshift support
+  mongoParameters.userDB = process.env.OPENSHIFT_MONGODB_DB_USERNAME;
+  mongoParameters.passwordDB=process.env.OPENSHIFT_MONGODB_DB_PASSWORD;
+  mongoParameters.ip=process.env.OPENSHIFT_MONGODB_DB_HOST;
+  mongoParameters.port=process.env.OPENSHIFT_MONGODB_DB_PORT;
+  //process.env.OPENSHIFT_APP_NAME;
+}
+
 var myDatabase=new mongoUtils(MongoClient, {url:getMongoAddress(mongoParameters.userDB, mongoParameters.passwordDB, mongoParameters.ip, mongoParameters.port, mongoParameters.db), collections:mongoParameters.collection}); //some defaults?
 
 function getMongoAddress(user, password, ip, port, db){

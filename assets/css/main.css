@@ -39,11 +39,18 @@ h2 {
 .container {
   max-width: 800px;
 }
-
+.element {
+  display:inline-block;
+  vertical-align: middle;
+  text-align:left;
+  clear:left;
+  margin:0;
+  padding:0;
+}
 .icon {
   height: 48px;
   width: 48px;
-  display: block;
+  /*display: block;*/
 }
 
 .float-right {

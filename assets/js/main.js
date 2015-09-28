@@ -22,6 +22,9 @@ var siteObj = [/*{
     header: "Skills",
     text: "skills"
   }, {
+    header: "Passion",
+    text: "passions"
+  },{
     header: "Analytics",
     text: "analytics"
   }, {
@@ -35,6 +38,10 @@ var siteObj = [/*{
     header: "Credit Risk",
     text: "CreditRiskPaper",
     researchUrl: '/assets/pdf/CreditRiskPaper.pdf'
+  },{
+    header: "Operational Risk",
+    text: "OpsRiskPaper",
+    researchUrl: '/assets/pdf/OpsRiskPaper.pdf'
   }],
   route: "research",
   displayName: "Research"
@@ -112,6 +119,7 @@ var siteObj = [/*{
       name:"Operational Risk",
       content: [{
         text: "inputProject",
+        researchUrl: '/assets/pdf/OpsRiskPaper.pdf',
         input: [{
           label: "Time Horizon",
           placeholder: "1",

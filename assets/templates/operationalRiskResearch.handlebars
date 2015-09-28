@@ -1,5 +1,5 @@
 <div class='txt'>
-  This project is a basic implementation of my operational risk model.
+  This project is a basic implementation of my operational risk model.  The full details can be found in my <a href='{{researchUrl}}'>paper</a>.
 </div>
 <div class='txt'>
   The parameters have the following interpretation:
@@ -9,77 +9,4 @@
     {{/each}}
 
   </ul>
-</div>
-<div class='txt'>
-  <h2> Model Description</h2>
-
-Standard LDA modeling of operational risk assumes that the frequency and severity of operational loss events are independent. I propose a model that treats the operational risk loss variable as a compound Poisson process.  By using Carr and Wu's concept of a ``leverage neutral'' measure I obtain a semi-closed form solution for the characteristic function of the loss distribution while retaining the following key features: the frequency distribution is auto-correlated and the frequency distribution and severity distributions are correlated.  The standard LDA model is recovered as a special case of the model.
-
-Consider a business with operational loss events.  The random variable that counts the number of loss events in a time period {{#tex}}[0, t]{{/tex}} is {{#tex}}N_t{{/tex}}.  The total loss from these loss events is {{#tex}}X_t=\sum_{j=1} ^ {N_t} L_j{{/tex}} where {{#tex}}L_j{{/tex}} is a strictly positive random variable which denotes the dollar loss from loss event {{#tex}}j{{/tex}}.  Since {{#tex}}L_j{{/tex}} is stochastic, {{#tex}}X_t{{/tex}} is a compound Poisson jump process.  Intuitively, loss events arrive as a ``stream'' instead of at a point in time, with no two events occurring simultaneously.  For the remainder of this paper the distribution of {{#tex}}L{{/tex}} is assumed to be a Gamma-distributed random variable with parameters {{#tex}}c,\, d){{/tex}}.  This distribution is not a required feature and is used for simplicity.  In principal any positive distribution with analytic characteristic function and density may be used.
-
-A Poisson jump process is characterized by the product {{#tex}}\lambda d\mu{{/tex}} where {{#tex}}\lambda{{/tex}} controls the frequency of jumps and {{#tex}}d\mu{{/tex}} is the density of the jump size.  This is made clear by the characteristic function of a compound Poisson jump process:
-{{#tex true}}{E}[e^{uiX_t}]=e^{t \int_{R} (e^{iuL}-1) \lambda d\mu}=e^{\lambda t \left({E}\left[e^{iuL_j}\right]-1\right)}{{/tex}}
-
-From the characteristic function it is clear that if {{#tex}}t{{/tex}} is itself random (for notational convenience, {{#tex}}\tau{{/tex}}) and independent of {{#tex}}L_j{{/tex}} that the extended characteristic function would be
-{{#tex true}}{E}[e^{uiX_\tau}]=\phi_\tau \left(\lambda \left({E}\left[e^{iuL_j}\right]-1\right)\right){{/tex}}
-Where {{#tex}}\phi_\tau{{/tex}} is the moment generating function of {{#tex}}\tau{{/tex}}.
-
-A general specification of {{#tex}}\tau{{/tex}} that admits a (semi) analytic moment generating function is the affine jump-diffusion of Duffie et al (2000). In this paper, {{#tex}}\tau{{/tex}} will be driven by a particular form of this general jump-diffusion. However, the independence assumption between {{#tex}}\tau{{/tex}} and {{#tex}}L{{/tex}} is dropped.  This leads to a model that has increased tail risk to account for dependencies between the frequency and severity distributions.  The goal is to find a semi analytic characteristic function for {{#tex}}X_{\tau}{{/tex}}.
-<h2> Jump Specification</h2>
-
-The jump-diffusion is specified as
-{{#tex true}}\tau=\int_0 ^ t v(s)ds{{/tex}}
-{{#tex true}}v_t=v_0+\int_0 ^t a(1-\delta \lambda {E}[L_j]-v_s)ds+\sigma \int_0 ^ t \sqrt{v_s} dW_s +\delta \sum_{j=1} ^ {N_\tau} L_j {{/tex}}
-{{#tex true}}v_t=v_0+\int_0 ^t a(\bar{b}-v_s)ds+\sigma \int_0 ^ t \sqrt{v_s} dW_s +\delta \sum_{j=1} ^ {N_\tau} L_j {{/tex}}
-Note that {{#tex}}N_\tau{{/tex}} is the time changed counting process {{#tex}}N_t{{/tex}} and that the long run expected value of the {{#tex}}v_t{{/tex}} is one.  Hence the stochastic time is an unbiased estimator of real time.  Note also that since {{#tex}}L_j{{/tex}} is strictly positive that {{#tex}}v{{/tex}} is positive.
-
-This jump-diffusion process for {{#tex}}v{{/tex}} provides an autocorrelated frequency of jumps (``clumps'' of jumps) and correlation between the jump size and the frequency of jumps through the jumps' effect on the level of the process {{#tex}}v{{/tex}}.  Hence this specification fully incorporates correlation between jump size and frequency of jumps and frequency of jumps with itself.  Since there is clear correlation between the jump size and jump frequency, the equation for the laplace transform can no longer be directly applied.  However, Carr and Wu (2004) showed that by using the ``leverage neutral'' measure that the characteristic function of {{#tex}}X_\tau{{/tex}} retains analytic tractability under this specification.
-<h2>Semi-analytic solution </h2>
-The characteristic function of {{#tex}}X_\tau{{/tex}} is
-{{#tex true}}{E}[e^{uiX_\tau}]={E}\left[e^{uiX_\tau+ \tau \lambda  \left({E}\left[e^{iuL}\right]-1\right)- \tau \left({E}\left[e^{iuL}\right]-1\right)}\right]{{/tex}}
-{{#tex true}}={E}^V \left[e^{\tau \lambda {E}\left[e^{iuL}-1\right]}\right]{{/tex}}
-Where {{#tex}}{P}^V{{/tex}} is the measure induced by {{#tex}}\eta_\tau=e^{uiX_\tau- \tau\lambda \left({E}\left[e^{iuL}\right]-1\right)}{{/tex}}.  Note that {{#tex}}\eta_t{{/tex}} is the complex-valued Escher transform.
-
-It is a well known result (eg,  Papapantolean 2008) that the parameters of a Levy process are altered under the Esscher transform as follows:
-
-Let {{#tex}}Y_t{{/tex}} be a compound Poisson process characterized by {{#tex}}\lambda d\mu{{/tex}}.  Define the Esscher transform by
-{{#tex true}}\eta_\tau=e^{uiX_t- t\lambda \left({E}\left[e^{iuL}\right]-1\right)}{{/tex}}
-Then under the probability measure {{#tex}}\eta_\tau d{P}{{/tex}}, {{#tex}}Y_t{{/tex}} is a compound Poisson process characterized by {{#tex}}e^{uiL}\lambda d\mu{{/tex}}
-
-Under this new measure, the dynamics of {{#tex}}v{{/tex}} are as follows:
-{{#tex true}}v_t=v_0+\int_0 ^t a(\bar{b}-v_s)ds+\sigma \int_0 ^ t \sqrt{v_s} dW_s +\delta \sum_{j=1} ^ {\hat{N}_\tau} \hat{L}_j {{/tex}}
-
-By Duffie et al (2000), for affine processes like {{#tex}}v_t{{/tex}}, the following statement holds:
-{{#tex true}}{E} \left[e^{-\rho\int_0 ^ {T} v_s ds}\right]=e^{\alpha(0, T)+\beta(0, T)v_0}{{/tex}}
-Where {{#tex}}\alpha,\,\beta{{/tex}} satisfy
-
-{{#tex true}}
-\begin{cases}
-\frac{\partial \beta}{\partial t}=a \beta+\rho-\frac{1}{2} \sigma^2 \beta^2-\int_{R^+} \left(e^{\delta \beta L}-1\right)\lambda e^{uiL} d\mu & \beta(T, T)=0\\
-\frac{\partial \alpha}{\partial t}=-a\bar{b} \beta & \alpha(T, T)=0
-\end{cases} {{/tex}}
-
-In this case, {{#tex}}\rho=\lambda(1-{E}[e^{uiL}]){{/tex}}.  The system of ODEs thus reads
-
-{{#tex true}}
-\begin{cases}
-\frac{\partial \beta}{\partial t}=a \beta+\lambda-\lambda{E}[e^{(ui+\delta \beta)L}]-\frac{1}{2} \sigma^2 \beta^2 & \beta(T, T)=0\\
-\frac{\partial \alpha}{\partial t}=-a\bar{b} \beta & \alpha(T, T)=0
-\end{cases} {{/tex}}
-
-<h2>Numerical Implementation</h2>
-
-The ODEs can be numerically solved.  A very basic scheme is Euler's finite difference solution, which results in the following difference equations which are iteratively solved:
-
-{{#tex true}}
-\begin{cases}
-\beta_{j+1}=\beta_j -\Delta t \left(a\beta_j+\lambda-\lambda{E}[e^{(ui+\delta \beta)L}]-\frac{1}{2} \sigma^2 \beta_j^2 \right)& \beta_0=0\\
-\alpha_{j+1}=\alpha_j+\Delta t a\bar{b} \beta_j & \alpha_0=0
-
-\end{cases}
-{{/tex}}
-Here {{#tex}}\Delta t=t/n{{/tex}} where {{#tex}}n{{/tex}} is the number of discretions in {{#tex}}[0,\,t]{{/tex}}.  The solution (for a given {{#tex}}u{{/tex}}) is {{#tex}}e^{\beta_n v_0+\alpha_n}{{/tex}}.  This system of ODEs must be solved for each discrete {{#tex}}u{{/tex}} in the complex domain.
-
-A more sophisticated technique is to use the Runge-Kutta algorithm to solve the ODE.  This algorithm has the same numerical complexity as Euler's scheme but with significantly better convergence properties.  Solving for these ODEs for each discrete {{#tex}}u{{/tex}} results in an {{#tex}}n{{/tex}} by {{#tex}}m{{/tex}} matrix of solutions for each discrete {{#tex}}t_i \in [0, t]{{/tex}}.  Hence the solution to the ODEs can be reused for multiple time intervals.
-
 </div>

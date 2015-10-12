@@ -1,0 +1,1 @@
+This is my personal website which includes some of my projects. Instructions to build: simply clone the repository and type "npm install" in the main directory, then "node server.js" to start the program.  Note that MongoDB is required.

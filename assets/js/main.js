@@ -276,6 +276,7 @@ function iterate(val) {
 }
 function createContent(record) {
   Path.map("#/" + record.route).to(function() {
+    console.log(record.route);
     socket.emit('pageLoad', {
       file: record.route
     });

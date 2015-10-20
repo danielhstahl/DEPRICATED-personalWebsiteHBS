@@ -111,6 +111,7 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('disconnect', function() { //when page is left
+    console.log("got here");
     client.connect(function(err) {
       if(err) {
         return console.error('could not connect to postgres', err);

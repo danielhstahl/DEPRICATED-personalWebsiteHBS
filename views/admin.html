@@ -24,7 +24,7 @@
     </body>
     <script type='text/javascript'>
       var socket = io();
-      socket.emit('testDB'); //test DB connection
+      //socket.emit('testDB'); //test DB connection
       var dbChangeId='submitDBChange';
       //var dbTestId='testDBChange';
       var submitAuthenticationId='submitAuthenticate';
@@ -33,56 +33,40 @@
           type:'bar',
           title:'Page Views',
           id:'chartByPage',
-          noSql:[
-            {$match:{page:{$ne:null}}},
-            {$group:{_id:"$page", "y":{$sum:1}}}
-          ]//sum over '1' is the same as sql's count
+          sql:"SELECT COUNT(IP) as uniqueIP, page FROM (SELECT IP, page FROM visitlog GROUP BY IP, page) as t1 GROUP BY page;"
         },
         {
           type:'bar',
           id:'chartByAvg', //average total time spent on site
           title:'Average Session',
-          noSql:[
-            {$match:{dateLeft:{$ne:null}}},
-            {$group:{_id:"$ip", "y":{$avg:{$subtract:["$dateLeft", "$dateEntered"]}}}}
-          ]
+          sql:"SELECT AVG(diff) as timespent, IP FROM (SELECT (timeleft-timeentered)/60 as diff, IP FROM visitlog WHERE timeleft IS NOT NULL) as t1 GROUP BY IP;"
         },
         {
           type:'timeseries', //hits by date
           id:'chartByTime',
           title:'Views by Date',
-          noSql:[
-            {$match:{dateEntered:{$ne:null}}},
-            {$group:{"_id":{"year":{"$year":"$dateEntered"}, "month":{"$month":"$dateEntered"}, "day":{"$dayOfMonth":"$dateEntered"}, "ip":"$ip"}, "y":{$sum:1}}},
-            {$group:{"_id":{"year":"$_id.year", "month":"$_id.month", "day":"$_id.day"}, "y":{$sum:1}   }}
-
-            //{$group:{"_id":"$ip", "y":{$avg:{"year":{"$year":"$dateEntered"}, "month":{"$month":"$dateEntered"}, "day":{"$dayOfMonth":"$dateEntered"}}}}}
-          ]
+          sql:"SELECT COUNT(IP) as totalvisit, dateentered FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered DESC;"
         },
         {
           type:'bar', //unique hits
           id:'chartByIP',
           title:'Distinct IP addresses',
-          noSql:[
-            {$match:{dateEntered:{$ne:null}}},
-            {$group : {"_id" : "$ip"} },
-            {$group : {"_id" : "distinct", "y":{$sum:1}}} //this is weird that it works...
-          ]
+          sql:"SELECT DISTINCT IP FROM visitlog;"
         }
       ];
       Handlebars.partials = Handlebars.templates;
       var template = Handlebars.templates['admin'];
       var editDB = Handlebars.templates['editDB'];
-      socket.on('dbCheck', function(data){
-        console.log(data);
-        if(data.isConnect){ //connection succeeded
+      //socket.on('dbCheck', function(data){
+        //console.log(data);
+        //if(data.isConnect){ //connection succeeded
           $('#main').html(template({authenticated:false, chartType:siteMap, authenticateId:submitAuthenticationId}));
 
-        }
-        else {
-          $('#main').html(editDB({dbChangeId:dbChangeId}));
-        }
-      });
+      //}
+        //else {
+        //  $('#main').html(editDB({dbChangeId:dbChangeId}));
+        //}
+      //});
 
       $('#main').on('submit', '#'+submitAuthenticationId, function(e){
         socket.emit('authenticate', {user:$('#userName').val(), password:$('#password').val()});

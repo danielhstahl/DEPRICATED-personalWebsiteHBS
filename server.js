@@ -3,16 +3,30 @@ var http = require('http');
 var exphbs = require('express-handlebars');
 //var katex = require('parse-katex');
 var bodyParser = require('body-parser');
-var mongo = require('mongodb');
+/*var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
-var mongoUtils = require('mongoUtils');
-
+var mongoUtils = require('mongoUtils');*/
+var pg = require('pg');
 var app = express();
 var port = process.env.OPENSHIFT_NODEJS_PORT || 4000; //for openshift support
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1"; //for openshift support
 var server = http.createServer(app); //required fro socket.io
 var io = require('socket.io').listen(server);
-var mongoParameters = {
+//var postgresqlParam={};
+/*if (process.env.OPENSHIFT_POSTGRESQL_DB_PASSWORD) { //openshift support
+  postgresqlParam.userDB = process.env.OPENSHIFT_POSTGRESQL_DB_USERNAME;
+  postgresqlParam.passwordDB = process.env.OPENSHIFT_POSTGRESQL_DB_PASSWORD;
+  postgresqlParam.ip = process.env.OPENSHIFT_POSTGRESQL_DB_HOST;
+  postgresqlParam.port = process.env.OPENSHIFT_POSTGRESQL_DB_PORT;
+  //postgresqlParam.db = process.env.OPENSHIFT_APP_NAME;
+}*/
+//if(process.env.OPENSHIFT_POSTGRESQL_DB_URL){
+
+var postgresqlParam=process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+var client = new pg.Client(postgresqlParam);
+//}
+
+/*var mongoParameters = {
   userDB: '',
   passwordDB: '',
   ip: '192.168.0.1',
@@ -43,7 +57,7 @@ function getMongoAddress(user, password, ip, port, db) {
   }
   console.log("mongodb://" + user + password + ip + ":" + port + "/" + db);
   return "mongodb://" + user + password + ip + ":" + port + "/" + db;
-}
+}*/
 app.use(bodyParser.json());
 var handlebars = exphbs.create({
   extname: '.html'
@@ -82,35 +96,41 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('pageLoad', function(data) { //call on page load, which should be whenever "path.js" is called from client
-    myDatabase.insertData({
-      page: data.file,
-      dateEntered: new Date(),
-      dateLeft: null,
-      ip: address
-    }, function(data) {
-      //console.log(data);
-      //io.emit('updateChart', data);
+    client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
+      }
+      client.query("INSERT INTO visitlog VALUES('"+address+"', CURRENT_TIMESTAMP, NULL, '"+data.file+"');", function(err, result) {
+        if(err) {
+          return console.error('error running query', err);
+        }
+        //console.log(result.rows[0].theTime);
+        //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+        client.end();
+      });
     });
   });
   socket.on('disconnect', function() { //when page is left
-    myDatabase.updateData({
-      ip: address,
-      dateLeft: {
-        $eq: null
+    client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
       }
-    }, "dateLeft", new Date(), function(data) {
-      io.emit('updateChart', data);
-    }); //should work since all dateLefts should be not null
-    console.log('user disconnected');
+      client.query("UPDATE visitlog SET timeleft=CURRENT_TIMESTAMP WHERE IP='"+address+"' AND timeleft IS NULL;", function(err, result) {
+        if(err) {
+          return console.error('error running query', err);
+        }
+        client.end();
+      });
+    });
   });
-  socket.on('testDB', function(data) {
+/*  socket.on('testDB', function(data) {
     myDatabase.test(function(isConnect) {
       io.emit('dbCheck', {
         isConnect: isConnect
       });
     });
-  });
-  socket.on('updateDataBase', function(data) { //update database configuration
+  });*/
+/*  socket.on('updateDataBase', function(data) { //update database configuration
     var keys = Object.keys(data);
     var n = keys.length;
     for (var i = 0; i < n; i++) {
@@ -127,55 +147,66 @@ io.on('connection', function(socket) {
         mongoDB: myDatabase.returnOptions()
       });
     });
-  });
+  });*/
 
   socket.on('authenticate', function(data) { //when attempt to authenticate
     var user = data.user
     var password = data.password;
-    var userDatabase = "userDB";
-    var userDB = new mongoUtils(MongoClient, {
-      url: getMongoAddress(mongoParameters.userDB, mongoParameters.passwordDB, mongoParameters.ip, mongoParameters.port, mongoParameters.db),
-      collections: userDatabase
-    });
-    userDB.retrieveData({
-      user: user,
-      password: password
-    }, function(dat) {
-      if (dat.length > 0) { //user exists in database
-        io.emit('authenticate', {
-          group: dat[0].group,
-          mongoOptions: myDatabase.returnOptions()
-        });
-      } else {
-        io.emit('authenticate', {
-          group: 'none'
-        });
+    client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
       }
+      client.query("SELECT COUNT(username) as user FROM username WHERE password='"+password+"' AND username='"+user+"';", function(err, result) {
+        if(err) {
+          return console.error('error running query', err);
+        }
+        client.end();
+        if(result.rows[0].user===1){
+          io.emit('authenticate', {
+            group: 'admin'
+          });
+        }
+        else{
+          io.emit('authenticate', {
+            group: 'none'
+          });
+        }
+      });
     });
+
   });
   socket.on('requestChartData', function(clientObject) {
     var dataObj = [];
     var n = clientObject.length;
-    for (var i = 0; i < n; i++) {
-      clientObject[i].noSql.indicator = clientObject[i].id;
-      clientObject[i].noSql.title = clientObject[i].title;
-      myDatabase.retrieveGroupData(clientObject[i].noSql, function(data, options) {
-        if(options==='error'){
-          io.emit('chartError', data);
-        }
-        else {
-          dataObj.push({
-            id: options.indicator,
-            data: data,
-            title:options.title
-          });
-          if (dataObj.length === n) {
-            io.emit('fullChartData', dataObj);
-          }
-        }
+    client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
+      }
+      for (var i = 0; i < n; i++) {
+        runQuery(clientObject[i]);
+        function runQuery(options){
+          client.query(options.sql, function(err, result) {
+            if(err){
+              io.emit('chartError', result);
+            }
+            else {
+              dataObj.push({
+                id: options.id,
+                data: result,
+                title:options.title
+              });
+              if (dataObj.length === n) {
+                io.emit('fullChartData', dataObj);
+              }
+            }
 
-      });
-    }
+
+          });
+        }
+      }
+      client.end();
+
+    });
   });
 
 });

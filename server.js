@@ -23,6 +23,7 @@ var io = require('socket.io').listen(server);
 //if(process.env.OPENSHIFT_POSTGRESQL_DB_URL){
 
 var postgresqlParam=process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+
 //}
 
 /*var mongoParameters = {
@@ -111,7 +112,6 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('disconnect', function() { //when page is left
-    console.log("got here");
     var client = new pg.Client(postgresqlParam);
     client.connect(function(err) {
       if(err) {
@@ -164,7 +164,7 @@ io.on('connection', function(socket) {
           return console.error('error running query', err);
         }
         client.end();
-        if(result.rows[0].user===1){
+        if(result.rows[0].user==="1"){
           io.emit('authenticate', {
             group: 'admin'
           });
@@ -181,35 +181,34 @@ io.on('connection', function(socket) {
   socket.on('requestChartData', function(clientObject) {
     var dataObj = [];
     var n = clientObject.length;
-    var client = new pg.Client(postgresqlParam);
-    client.connect(function(err) {
+    pg.connect(postgresqlParam, function(err, client){
       if(err) {
         return console.error('could not connect to postgres', err);
       }
       for (var i = 0; i < n; i++) {
         runQuery(clientObject[i]);
         function runQuery(options){
-          client.query(options.sql, function(err, result) {
-            if(err){
-              io.emit('chartError', result);
+          var data=[];
+          var query=client.query(options.sql);
+          query.on('row', function(row){
+            row.x=parseFloat(row.x);
+            data.push(row);
+          });
+          query.on('end', function() {
+            //done();
+            dataObj.push({
+              id: options.id,
+              data: data,
+              title:options.title
+            });
+            if (dataObj.length === n) {
+              io.emit('fullChartData', dataObj);
+              client.end();
             }
-            else {
-              dataObj.push({
-                id: options.id,
-                data: result,
-                title:options.title
-              });
-              if (dataObj.length === n) {
-                io.emit('fullChartData', dataObj);
-              }
-            }
-
-
+            //return res.json(results);
           });
         }
       }
-      client.end();
-
     });
   });
 

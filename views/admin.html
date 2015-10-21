@@ -33,25 +33,25 @@
           type:'bar',
           title:'Page Views',
           id:'chartByPage',
-          sql:"SELECT COUNT(IP) as uniqueIP, page FROM (SELECT IP, page FROM visitlog GROUP BY IP, page) as t1 GROUP BY page;"
+          sql:"SELECT COUNT(IP) as x, page as _id FROM (SELECT IP, page FROM visitlog GROUP BY IP, page) as t1 GROUP BY page;"
         },
-        {
+        /*{
           type:'bar',
           id:'chartByAvg', //average total time spent on site
           title:'Average Session',
           sql:"SELECT AVG(diff) as timespent, IP FROM (SELECT (timeleft-timeentered)/60 as diff, IP FROM visitlog WHERE timeleft IS NOT NULL) as t1 GROUP BY IP;"
-        },
+        },*/
         {
           type:'timeseries', //hits by date
           id:'chartByTime',
           title:'Views by Date',
-          sql:"SELECT COUNT(IP) as totalvisit, dateentered FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered DESC;"
+          sql:"SELECT COUNT(IP) as x, dateentered as _id FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered DESC;"
         },
         {
           type:'bar', //unique hits
           id:'chartByIP',
           title:'Distinct IP addresses',
-          sql:"SELECT DISTINCT IP FROM visitlog;"
+          sql:"SELECT COUNT(IP) as x, 'IP' as _id FROM (SELECT IP FROM visitlog GROUP BY IP) as t1;"
         }
       ];
       Handlebars.partials = Handlebars.templates;
@@ -97,7 +97,7 @@
       });
       socket.on('fullChartData', function(data){
         var n=data.length;
-        console.log(data);
+        //console.log(data);
         for(var i=0; i<n;i++){
           createChart(data[i]);
         }
@@ -113,6 +113,7 @@
         }
       });
       function createChart(chartData){
+        console.log(chartData);
         $('#'+chartData.id).highcharts({
           credits:false,
           title:{

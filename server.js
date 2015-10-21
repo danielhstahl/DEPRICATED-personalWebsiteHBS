@@ -23,7 +23,6 @@ var io = require('socket.io').listen(server);
 //if(process.env.OPENSHIFT_POSTGRESQL_DB_URL){
 
 var postgresqlParam=process.env.OPENSHIFT_POSTGRESQL_DB_URL;
-var client = new pg.Client(postgresqlParam);
 //}
 
 /*var mongoParameters = {
@@ -96,6 +95,7 @@ io.on('connection', function(socket) {
     });
   });
   socket.on('pageLoad', function(data) { //call on page load, which should be whenever "path.js" is called from client
+    var client = new pg.Client(postgresqlParam);
     client.connect(function(err) {
       if(err) {
         return console.error('could not connect to postgres', err);
@@ -112,6 +112,7 @@ io.on('connection', function(socket) {
   });
   socket.on('disconnect', function() { //when page is left
     console.log("got here");
+    var client = new pg.Client(postgresqlParam);
     client.connect(function(err) {
       if(err) {
         return console.error('could not connect to postgres', err);
@@ -153,6 +154,7 @@ io.on('connection', function(socket) {
   socket.on('authenticate', function(data) { //when attempt to authenticate
     var user = data.user
     var password = data.password;
+    var client = new pg.Client(postgresqlParam);
     client.connect(function(err) {
       if(err) {
         return console.error('could not connect to postgres', err);
@@ -179,6 +181,7 @@ io.on('connection', function(socket) {
   socket.on('requestChartData', function(clientObject) {
     var dataObj = [];
     var n = clientObject.length;
+    var client = new pg.Client(postgresqlParam);
     client.connect(function(err) {
       if(err) {
         return console.error('could not connect to postgres', err);

@@ -191,7 +191,7 @@ io.on('connection', function(socket) {
           var data=[];
           var query=client.query(options.sql);
           query.on('row', function(row){
-            row.x=parseFloat(row.x);
+            row.y=parseFloat(row.y);
             data.push(row);
           });
           query.on('end', function() {

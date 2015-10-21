@@ -33,7 +33,7 @@
           type:'bar',
           title:'Page Views',
           id:'chartByPage',
-          sql:"SELECT COUNT(IP) as x, page as _id FROM (SELECT IP, page FROM visitlog GROUP BY IP, page) as t1 GROUP BY page;"
+          sql:"SELECT COUNT(IP) as y, page as _id FROM (SELECT IP, page FROM visitlog GROUP BY IP, page) as t1 GROUP BY page;"
         },
         /*{
           type:'bar',
@@ -45,13 +45,13 @@
           type:'timeseries', //hits by date
           id:'chartByTime',
           title:'Views by Date',
-          sql:"SELECT COUNT(IP) as x, dateentered as _id FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered DESC;"
+          sql:"SELECT COUNT(IP) as y, dateentered as _id FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered DESC;"
         },
         {
           type:'bar', //unique hits
           id:'chartByIP',
           title:'Distinct IP addresses',
-          sql:"SELECT COUNT(IP) as x, 'IP' as _id FROM (SELECT IP FROM visitlog GROUP BY IP) as t1;"
+          sql:"SELECT COUNT(IP) as y, 'IP' as _id FROM (SELECT IP FROM visitlog GROUP BY IP) as t1;"
         }
       ];
       Handlebars.partials = Handlebars.templates;

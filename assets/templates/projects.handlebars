@@ -1,5 +1,14 @@
 <div class="row">
+    
+    <div class="col-xs-12">
+        <p>
+            {{purpose}}
+        </p>
+        
+    </div>
+
 {{#each projects}}
+    
 <div class="col-xs-12 col-md-{{colMd}} col-sm-6" >
 
   <a href="#/{{this.route}}" class="thumbnail card" style="background-image:url({{this.src}})">

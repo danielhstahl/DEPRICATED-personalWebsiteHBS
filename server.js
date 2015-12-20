@@ -1,11 +1,12 @@
 var express = require('express');
 var http = require('http');
 var exphbs = require('express-handlebars');
-//var katex = require('parse-katex');
+
 var bodyParser = require('body-parser');
-/*var mongo = require('mongodb');
-var MongoClient = mongo.MongoClient;
-var mongoUtils = require('mongoUtils');*/
+var child_process = require('child_process');
+
+
+
 var pg = require('pg');
 var app = express();
 var port = process.env.OPENSHIFT_NODEJS_PORT || 4000; //for openshift support
@@ -78,22 +79,26 @@ app.get('/admin', function(req, res) {
   res.render('admin');
 
 });
+
 /*end page rendering */
-io.on('connection', function(socket) {
+
+io.on('connection', function(socket) {    
   var req=socket.request;
   var address = req.headers['x-forwarded-for'] || req.connection._peername.address || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
   socket.on('projects', function(data) { //if "submit" is clicked ona  project page
-    var fork = require('child_process').fork; //asynced child process
-    console.log(JSON.stringify(data));
-    var child = fork('node_modules/' + data.file + '.js');
-    child.send(data.attributes);
-    child.on('message', function(data) {
-      if (data.close) {
-        child.kill();
-      }
-      var key = Object.keys(data)[0];
-      io.emit(key, data[key]);
-    });
+      
+        var fork = require('child_process').fork; //asynced child process
+        //console.log(JSON.stringify(data));
+        var child = fork('node_modules/' + data.file + '.js');
+        child.send(data.attributes);
+        child.on('message', function(data) {
+          if (data.close) {
+            child.kill();
+          }
+          var key = Object.keys(data)[0];
+          io.emit(key, data[key]);
+        });
+    
   });
   socket.on('pageLoad', function(data) { //call on page load, which should be whenever "path.js" is called from client
     var client = new pg.Client(postgresqlParam);

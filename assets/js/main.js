@@ -1,5 +1,7 @@
 var socket = io();
 var chart = ""; /*"global" chart variable*/
+var yldchart = ""; /*"global" chart variable*/
+var yieldData="";
 /*begin site structure */
 var siteObj = [/*{
   content: [{
@@ -49,13 +51,18 @@ var siteObj = [/*{
   content: [{
     header: "Projects",
     text: "projects",
+    purpose: "These projects showcase best in practice modeling techniques.  The models are distributed via a web-based interface for easy dissemination.  All the parameters are available for the user to tweak.  And, behind the scenes, git and openshift are used to manage version control and production environments.",
     projects: [{
       route: "projects/creditRisk",
       src: "assets/images/creditRisk.jpg",
       name:"Credit Risk",
+      
+    
       colMd: 4,
       content: [{
+        purpose: "This project shows how to compute the distribution of a credit portfolio of defaultable assets with stochastic PD and LGD.  It includes full granularity and efficient computation.",
         text: "inputProject",
+         header:"Credit Risk",
         researchUrl: '/assets/pdf/CreditRiskPaper.pdf',
         input: [{
           label: "Number of Assets",
@@ -117,9 +124,13 @@ var siteObj = [/*{
       src: "assets/images/operationalRisk.jpg",
       colMd: 4,
       name:"Operational Risk",
+      
+     
       content: [{
         text: "inputProject",
+        purpose: "This project significantly extends the standard LDA operational loss framework to include correlation between severity and frequency and auto-correlation in frequency.  The distribution can be recovered practically instantly even for very long tailed severity distributions.",
         researchUrl: '/assets/pdf/OpsRiskPaper.pdf',
+         header:"Operational Risk",
         input: [{
           label: "Time Horizon",
           placeholder: "1",
@@ -190,8 +201,12 @@ var siteObj = [/*{
       src: "assets/images/stock-price.jpg",
       colMd: 4,
       name:"First Hitting Time",
+      
+      
       content: [{
+        purpose: "This project finds the distribution of the first hitting time of a generic one dimensional SDE.  This demonstrates the ease with which ODE solutions and FFT solutions can be combined to generate many distributions depending on the input parameters.",
         text: "inputProject",
+         header:"First Hitting Time",
         input: [{
           label: "Value To Hit",
           placeholder: "5",
@@ -232,6 +247,46 @@ var siteObj = [/*{
         hasOptions: true,
         submitId: "projects/firstHittingTime" /*this is used for communitcateing with server*/
 
+      }]
+    },         
+    {
+    route: "http://45.55.153.219:8000/",
+      src: "assets/images/marketRisk.jpg",
+      name:"Market Risk",
+      colMd: 4,
+      content: [{
+        purpose: "This project shows a Monte Carlo simulation (featuring C++ backend) for the distribution of a variety of assets.",
+        text: "inputProject",
+         header:"Market Risk",
+        input: [{
+          label: "Type of Asset",
+          placeholder: "Bond Call",
+          id: "asset",
+          description: "Type of Asset"
+        }, {
+          label: "Time Horizon (Days)",
+          placeholder: "10",
+          id: "t",
+          description: "Time horizon of the distribution of the asset"
+        }, {
+          label: "r0",
+          placeholder: ".03",
+          id: "r0",
+          description: "Initial value of interest rate diffusion process"
+        }, {
+          label: "Volatility of diffusion",
+          placeholder: ".03",
+          id: "sigma",
+          description: "The volatility of interest rate diffusion process"
+        }, {
+            label: "Number of simulations",
+            placeholder:"1000",
+            id:"n",
+            description:"Monte Carlo simulations"            
+        }],
+        chartId: "marketRisk",
+        hasOptions: false,
+        submitId: "projects/marketRisk"
       }]
     }],
 
@@ -275,22 +330,34 @@ function iterate(val) {
   }
 }
 function createContent(record) {
-  Path.map("#/" + record.route).to(function() {
-    console.log(record.route);
-    socket.emit('pageLoad', {
-      file: record.route
-    });
-    var $mainText = $('#mainText');
-    $mainText.html("");
-    trackRecords[record.route]=record;
-    var subRecord = record.content;
-    var m = subRecord.length;
-    for (var j = 0; j < m; j++) {
-      var html = template(subRecord[j]);
-      $mainText.append(html);
+    if(record.route.indexOf('http')===-1){
+        Path.map("#/" + record.route).to(function() {
+        //console.log(record.route);
+            socket.emit('pageLoad', {
+                file: record.route
+            });
+            var $mainText = $('#mainText');
+            $mainText.html("");
+            trackRecords[record.route]=record;
+            var subRecord = record.content;
+            var m = subRecord.length;
+            for (var j = 0; j < m; j++) {
+                if(subRecord[j].optionalFunction){
+                    subRecord[j].optionalFunction();
+                }
+            //console.log(subRecord[j]);
+                var html = template(subRecord[j]);
+                $mainText.append(html);
+            }
+            traverseDom();
+        });
     }
-    traverseDom();
-  });
+    else{
+        Path.map("#/" + record.route).to(function() {
+            window.location.href=record.route;
+        });
+    }
+  
 }
 /*end create site */
 
@@ -320,7 +387,7 @@ function getStock(stock, element) { /*get stock values from name*/
     dataType: 'jsonp',
     //dataType:'html',
     success: function(data) {
-      console.log(data);
+      //console.log(data);
       //data = data.replace(/\//g, "");
       //data = JSON.parse(data)[0];
       data=data[0];
@@ -337,26 +404,7 @@ function getStock(stock, element) { /*get stock values from name*/
       console.log(err);
     }
   });
-    /*url: '/stock',
-    method: 'post',
-    data: JSON.stringify({
-      stock: stock
-    }),
-    contentType: 'application/json',
-    success: function(data) {
-      data = data.replace(/\//g, "");
-      data = JSON.parse(data)[0];
-      var objForTemplate = {
-        symbol: data.t,
-        price: data.l,
-        change: data.c,
-        up: data.c.substring(0, 1) !== '-'
-      }
-      var html = stockTemplate(objForTemplate);
-      element.prepend(html);
-    }*/
-
-  //});
+    
 
 }
 /*end utility functions */
@@ -380,15 +428,15 @@ $('body').click(function(e){ //handle sidebar events
 $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is clicked*/
   var attributes = {};
   $('.projectInput').each(function() {
-    var $ths = $(this);
-    var id = $ths.attr('id');
-    attributes[id] = $ths.val();
-    var nbr = Number(attributes[id]);
-    if (!attributes[id]) {
-      attributes[id] = Number($ths.attr('placeholder'));
-    } else {
-      attributes[id] = nbr;
-    }
+      var $ths = $(this);
+      var id = $ths.attr('id');
+      attributes[id] = $ths.val();
+        var nbr = Number(attributes[id]);
+        if (!attributes[id]) {
+          attributes[id] = Number($ths.attr('placeholder'));
+        } else {
+          attributes[id] = nbr;
+        }
   });
   var currentLocation=Path.routes.current;
   var route=currentLocation.substring(2); //remove "/#"
@@ -398,7 +446,7 @@ $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is cl
     file: expressRoute[1],
     attributes: attributes
   });
-  console.log(trackRecords[route].content[0]);
+  //console.log(trackRecords[route].content[0]);
   var mdl = modal({
     text: 'chart',//'creditRiskResearch'
     hasOptions:trackRecords[route].content[0].hasOptions
@@ -411,8 +459,9 @@ $('#mainText').on('click', '#execute', function(e) { /*if project "Submit" is cl
   });
 });
 socket.on('update', function(data) {
-  $('#progressBar').css("width", data);
+    $('#progressBar').css("width", data);
 });
+
 socket.on('result', function(data) {
   chart = "";
   $('#progressBar').css("width", '0%');
@@ -428,7 +477,7 @@ socket.on('result', function(data) {
     })); /*select a chart*/
     $select.on('click', '.selectSeries', function(e) {
       e.preventDefault();
-      console.log("got here");
+      //console.log("got here");
       handleSeriesClick(data, this);
     });
   }
@@ -460,9 +509,39 @@ $('#mainText').on('click', '#projectHelp', function(e) {
 /*end event handling */
 
 /*chart functions */
+/*function createYieldChart(chartData){
+    var cols=Object.keys(chartData);
+     yldchart=new Highcharts.Chart({
+        credits:false,
+        chart: {
+          type: 'spline',
+          renderTo: 'mainText',
+          zoomType: 'x'
+        },
+        title:{
+          text:"Spot and Forward Curves"
+        },
+        xAxis:{
+          type:'category'
+        },
+        legend:{
+          enabled:false
+        },
+        series:[{
+          //type:'spline',
+          data:chartData[cols[0]],
+          name:cols[0]
+        }]
+    });
+    yldchart.addSeries({
+    //type:'spline',
+        data:chartData[cols[0]],
+        name:cols[0]
+    });
+}*/
 
 function createChart(data) {
-  console.log(data);
+  //console.log(data);
   if (isNaN(data.y[0]) || Math.abs(data.y[0]) > 100) { /*something bad happened in the algorithm...*/
     console.log("problem!");
 

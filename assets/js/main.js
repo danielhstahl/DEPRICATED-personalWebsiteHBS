@@ -33,7 +33,7 @@ var siteObj = [/*{
     header: "Model Risk",
     text: "modelRisk"
   }],
-  route: "home",
+  route: "#/home",
   displayName: "Home"
 }, {
   content: [{
@@ -45,7 +45,7 @@ var siteObj = [/*{
     text: "OpsRiskPaper",
     researchUrl: '/assets/pdf/OpsRiskPaper.pdf'
   }],
-  route: "research",
+  route: "#/research",
   displayName: "Research"
 },{
   content: [{
@@ -53,7 +53,7 @@ var siteObj = [/*{
     text: "projects",
     purpose: "These projects showcase best in practice modeling techniques.  The models are distributed via a web-based interface for easy dissemination.  All the parameters are available for the user to tweak.  And, behind the scenes, git and openshift are used to manage version control and production environments.",
     projects: [{
-      route: "projects/creditRisk",
+      route: "#/projects/creditRisk",
       src: "assets/images/creditRisk.jpg",
       name:"Credit Risk",
       
@@ -120,7 +120,7 @@ var siteObj = [/*{
         submitId: "projects/creditRisk"
       }]
     }, {
-      route: "projects/operationalRisk",
+      route: "#/projects/operationalRisk",
       src: "assets/images/operationalRisk.jpg",
       colMd: 4,
       name:"Operational Risk",
@@ -197,7 +197,7 @@ var siteObj = [/*{
         submitId: "projects/operationalRisk"
       }]
     }, {
-      route: "projects/firstHittingTime",
+      route: "#/projects/firstHittingTime",
       src: "assets/images/stock-price.jpg",
       colMd: 4,
       name:"First Hitting Time",
@@ -250,7 +250,7 @@ var siteObj = [/*{
       }]
     },         
     {
-    route: "http://45.55.153.219:8000/",
+      route: "http://45.55.153.219:8000/",
       src: "assets/images/marketRisk.jpg",
       name:"Market Risk",
       colMd: 4,
@@ -292,7 +292,7 @@ var siteObj = [/*{
 
 
   }],
-  route: "projects",
+  route: "#/projects",
   displayName: "Projects"
 }];
 
@@ -322,29 +322,31 @@ function iterate(val) {
     createContent(record);
     var subRecord = record.content;
     var m = subRecord.length;
+    var plainroute=record.route.substring(2);
     for (var j = 0; j < m; j++) {
-      if (subRecord[j][record.route]) { /*if additional pages defined through route*/
-        iterate(subRecord[j][record.route]);
+        
+      if (subRecord[j][plainroute]) { /*if additional pages defined through route*/
+        iterate(subRecord[j][plainroute]);
       }
     }
   }
 }
 function createContent(record) {
     if(record.route.indexOf('http')===-1){
-        Path.map("#/" + record.route).to(function() {
+        //console.log(record.route);
+        Path.map(record.route).to(function() {
+            //console.log(record.route);
+            var plainroute=record.route.substring(2); //remove "/#"
         //console.log(record.route);
             socket.emit('pageLoad', {
-                file: record.route
+                file: plainroute
             });
             var $mainText = $('#mainText');
             $mainText.html("");
-            trackRecords[record.route]=record;
+            trackRecords[plainroute]=record;
             var subRecord = record.content;
             var m = subRecord.length;
             for (var j = 0; j < m; j++) {
-                if(subRecord[j].optionalFunction){
-                    subRecord[j].optionalFunction();
-                }
             //console.log(subRecord[j]);
                 var html = template(subRecord[j]);
                 $mainText.append(html);
@@ -352,11 +354,11 @@ function createContent(record) {
             traverseDom();
         });
     }
-    else{
+    /*else{
         Path.map("#/" + record.route).to(function() {
             window.location.href=record.route;
         });
-    }
+    }*/
   
 }
 /*end create site */

@@ -473,12 +473,10 @@ templates['mathematicalModeling'] = template({"compiler":[7,">= 4.0.0"],"main":f
     return "The purpose of a model is to interpret data for human consumption to facilitate superior decision making.  Increasing complexity of the stochastic data generating process requires mathematical sophistication, while providing results in a timely, understandable, and applicable manner.  Thus a model must be computationally efficient, it must have informative output, and it must be reliable.  As with data, I have self-imposed the following constraints in creating a model:\r<ul>\r<li> The model must be parsimonious</li>\r<li> The model must, whenever practicable, have a semi-analytical solution (to the point that efficient methods of solutions can achieved)</li>\r<li> The model must be repeatable.</li>\r<li> The model either must be have a GUI or be embedded within a data flow. </li>\r</ul>\r\n";
 },"useData":true});
 templates['modal'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
+    var stack1;
 
-  return "<!-- Modal -->\n<div class=\"modal fade\" id=\"newModal\" tabindex=\"-1\" role=\"dialog\" ><!--aria-labelledby=\"myModalLabel\">-->\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n        <!--<h4 class=\"modal-title\" id=\"myModalLabel\">"
-    + container.escapeExpression(((helper = (helper = helpers.queryId || (depth0 != null ? depth0.queryId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"queryId","hash":{},"data":data}) : helper)))
-    + "</h4>-->\n      </div>\n      <div class=\"modal-body\">\n        <div class='verticalScroll'>\n            <div class=''>\n"
-    + ((stack1 = container.invokePartial(helpers.lookup.call(alias1,depth0,"text",{"name":"lookup","hash":{},"data":data}),depth0,{"data":data,"indent":"                ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
+  return "<!-- Modal -->\n<div class=\"modal fade\" id=\"newModal\" tabindex=\"-1\" role=\"dialog\" ><!--aria-labelledby=\"myModalLabel\">-->\n  <div class=\"modal-dialog modal-lg\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-body\">\n        <div class='verticalScroll'>\n            <div class=''>\n"
+    + ((stack1 = container.invokePartial(helpers.lookup.call(depth0 != null ? depth0 : {},depth0,"text",{"name":"lookup","hash":{},"data":data}),depth0,{"data":data,"indent":"                ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
     + "             </div>\n        </div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n";
 },"usePartial":true,"useData":true});
 templates['modelRisk'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -512,7 +510,7 @@ templates['projects'] = template({"1":function(container,depth0,helpers,partials
 
   return "    \n<div class=\"col-xs-12 col-md-"
     + alias1(((helper = (helper = helpers.colMd || (depth0 != null ? depth0.colMd : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"colMd","hash":{},"data":data}) : helper)))
-    + " col-sm-6\" >\n\n  <a href=\"#/"
+    + " col-sm-6\" >\n\n  <a href=\""
     + alias1(alias2((depth0 != null ? depth0.route : depth0), depth0))
     + "\" class=\"thumbnail card\" style=\"background-image:url("
     + alias1(alias2((depth0 != null ? depth0.src : depth0), depth0))
@@ -533,7 +531,7 @@ templates['projects'] = template({"1":function(container,depth0,helpers,partials
 templates['sidebar'] = template({"1":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "    <li>\n      <a href='#/"
+  return "    <li>\n      <a href='"
     + alias2(alias1((depth0 != null ? depth0.route : depth0), depth0))
     + "' class='item'>"
     + alias2(alias1((depth0 != null ? depth0.displayName : depth0), depth0))

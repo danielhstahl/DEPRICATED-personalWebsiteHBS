@@ -44,7 +44,7 @@
           type:'timeseries', //hits by date
           id:'chartByTime',
           title:'Views by Date',
-          sql:"SELECT COUNT(IP) as y, dateentered as x FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered DESC;"
+          sql:"SELECT COUNT(IP) as y, dateentered as x FROM (SELECT IP, date_trunc('day', timeentered) as dateentered FROM visitlog GROUP BY IP, date_trunc('day', timeentered)) as t1 GROUP BY dateentered ORDER BY dateentered ASC;"
         },
         {
           type:'bar', //unique hits

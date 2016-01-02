@@ -6,8 +6,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         
-        <!--<script src="/assets/js/highcharts-custom.js"></script>-->
-        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="/assets/js/highcharts-custom.js"></script>
          <script src='/socket.io/socket.io.js'></script>
         <script src="/assets/js/handlebars.runtime-v4.0.5.js"></script>
         <script src="/assets/templates/templates.js"></script>
@@ -114,7 +113,14 @@
       });
       function createChart(chartData){
         console.log(chartData);
-        $('#'+chartData.id).highcharts({
+         var chart = new Highcharts.Chart({
+              chart: {
+                type: 'column',
+                renderTo: chartData.id,
+                zoomType: 'x'
+              }, 
+          
+        //$('#'+chartData.id).highcharts({
           credits:false,
           title:{
             text:chartData.title
@@ -129,7 +135,7 @@
             type:'column',
             data:chartData.data
           }]
-        })
+        });
       }
     </script>
 

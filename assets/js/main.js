@@ -18,6 +18,9 @@ var siteObj = [/*{
   displayName: "Home"
 }, */{
   content: [{
+    header:"Vision",
+    text:"vision"
+  },{
     header: "Summary",
     text: "summary"
   }, {
@@ -56,8 +59,8 @@ var siteObj = [/*{
       route: "#/projects/creditRisk",
       src: "assets/images/creditRisk.jpg",
       name:"Credit Risk",
-      
-    
+
+
       colMd: 4,
       content: [{
         purpose: "This project shows how to compute the distribution of a credit portfolio of defaultable assets with stochastic PD and LGD.  It includes full granularity and efficient computation.",
@@ -124,8 +127,8 @@ var siteObj = [/*{
       src: "assets/images/operationalRisk.jpg",
       colMd: 4,
       name:"Operational Risk",
-      
-     
+
+
       content: [{
         text: "inputProject",
         purpose: "This project significantly extends the standard LDA operational loss framework to include correlation between severity and frequency and auto-correlation in frequency.  The distribution can be recovered practically instantly even for very long tailed severity distributions.",
@@ -201,8 +204,8 @@ var siteObj = [/*{
       src: "assets/images/stock-price.jpg",
       colMd: 4,
       name:"First Hitting Time",
-      
-      
+
+
       content: [{
         purpose: "This project finds the distribution of the first hitting time of a generic one dimensional SDE.  This demonstrates the ease with which ODE solutions and FFT solutions can be combined to generate many distributions depending on the input parameters.",
         text: "inputProject",
@@ -248,7 +251,7 @@ var siteObj = [/*{
         submitId: "projects/firstHittingTime" /*this is used for communitcateing with server*/
 
       }]
-    },         
+    },
     {
       route: "http://45.55.153.219:8000/",
       src: "assets/images/marketRisk.jpg",
@@ -282,7 +285,7 @@ var siteObj = [/*{
             label: "Number of simulations",
             placeholder:"1000",
             id:"n",
-            description:"Monte Carlo simulations"            
+            description:"Monte Carlo simulations"
         }],
         chartId: "marketRisk",
         hasOptions: false,
@@ -324,7 +327,7 @@ function iterate(val) {
     var m = subRecord.length;
     var plainroute=record.route.substring(2);
     for (var j = 0; j < m; j++) {
-        
+
       if (subRecord[j][plainroute]) { /*if additional pages defined through route*/
         iterate(subRecord[j][plainroute]);
       }
@@ -359,7 +362,7 @@ function createContent(record) {
             window.location.href=record.route;
         });
     }*/
-  
+
 }
 /*end create site */
 
@@ -406,7 +409,7 @@ function getStock(stock, element) { /*get stock values from name*/
       console.log(err);
     }
   });
-    
+
 
 }
 /*end utility functions */
